@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us">
+<head>
+  <link href="fromelement.css" rel="stylesheet" type="text/css" />
+
+  <title>Media Capture from DOM Elements</title>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+  <script class="remove" src="https://www.w3.org/Tools/respec/respec-w3c-common">
+//<![CDATA[
+  <!-- keep this comment: what a frightening kludge -->
+  //]]>
+  </script>
+  <script class="remove" src="fromelement.js">
+//<![CDATA[
+  <!-- keep this comment -->
+  //]]>
+  </script>
+</head>
+
+<body>
+  <section id="abstract">
+    <p>
+      This document defines how media that is rendered to a DOM element, such as
+      a <code>&lt;video&gt;</code> or <code>&lt;audio&gt;</code> element, can be
+      captured and rendered into a <code>MediaStream</code> [[!GETUSERMEDIA]].
+    </p>
+  </section>
+
+  <section class="informative" id="intro">
+    <h2>Introduction</h2>
+
+    <p>
+      This document describes an extension to HTML media elements that enables
+      the capture of the media that is rendered into a MediaStream
+      [[GETUSERMEDIA]].  The resulting <code>MediaStream</code> can be passed to
+    </p>
+  </section>
+
+  <section id="conformance">
+    <p>
+      This specification defines conformance criteria that apply to a single
+      product: the <dfn>user agent</dfn> that implements the interfaces that it
+      contains.
+    </p>
+    <p>
+      Implementations that use ECMAScript to implement the APIs defined in this
+      specification must implement them in a manner consistent with the
+      ECMAScript Bindings defined in the Web IDL specification [[!WEBIDL]], as
+      this specification uses that specification and terminology.
+    </p>
+  </section>
+
+  <section>
+    <h2>HTML Media Element Media Capture Extensions</h2>
+
+    <p>
+      The <code><a>captureStream</a>()</code> and
+      <code><a>captureStreamUntilEnded</a>()</code> methods are defined on HTML
+      [[!HTML5]] media elements.
+    </p>
+
+    <dl class="idl" title="partial interface HTMLMediaElement">
+      <dt>MediaStream captureStream()</dt>
+      <dd>
+        <p>
+          The <code><dfn>captureStream</dfn>()</code> method produces a
+          real-time capture of the media that is rendered to the media element.
+        </p>
+        <p>
+          The captured <code>MediaStream</code> comprises of
+          <code>MediaStreamTracks</code> that render the content from the set of
+          <a
+          href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-videotracklist-selectedindex">selected</a>
+          tracks from the media element.  If the media element does not have a
+          selected track of a given type, then no <code>MediaStreamTrack</code>
+          is present in the captured stream.
+        </p>
+        <p>
+          Thus, there at most one of each track type that the media element is
+          capable of rendering.  A <code>&lt;video&lt;</code> element can have
+          both video and audio tracks; an <code>&lt;audio&gt;</code> element can
+          have an audio track.  In both cases, the set of captured tracks could
+          be empty.
+        </p>
+        <p>
+          <code>captureStream</code> produces a <code>MediaStream</code> that
+          captures any current selected and playing media on the media track.
+          Changes in the media element source do not cause the stream to
+          terminate, though the set of <code>MediaStreamTrack</code>s might
+          change over time.  If the source stream for the media element ends, or
+          the a different source is selected, the <code>MediaStream</code>
+          captures the state of the media element.  This means that there could
+          be periods where the captured stream has no active media content.
+        </p>
+        <p>
+          If the selected track changes for the media element,
+          <code>MediaStreamTrack</code>s are added or removed as necessary to
+          ensure that the tracks in the <code>MediaStream</code> correctly
+          reflect the changes.  Necessary <code><a
+          href="https://w3c.github.io/mediacapture-main/#event-mediastream-addtrack">addtrack</a></code>
+          and <code><a
+          href="https://w3c.github.io/mediacapture-main/#event-mediastream-removetrack">removetrack</a></code>
+          events are generated to notify applications of these changes.
+        </p>
+        <p>
+          Captured <code>MediaStreamTrack</code>s end when the selected track
+          that it captures ends.  Captured <code>MediaStreamTrack</code>s also
+          end when the track selection on the media element changes, causing the
+          <code>MediaStreamTrack</code> to be removed from the captured stream.
+        </p>
+        <p>
+          If media playback is paused, the captured stream continues to produce
+          whatever is being actively rendered to the element.  What is rendered
+          to the captured stream will vary based on the type of media; a video
+          track might capture a still frame, or an audio track might capture
+          silence.
+        </p>
+        <p>
+          Whether a media element is actively rendering content (e.g., to a
+          screen or audio device) has no effect on the content of captured
+          streams.  Muting the audio on a media element does not cause the
+          capture to produce silence, nor does hiding the media element suppress
+          captured video.
+        </p>
+      </dd>
+
+      <dt>MediaStream captureStreamUntilEnded()</dt>
+      <dd>
+        <p>
+          A stream captured using <code>captureStreamUntilEnded()</code>
+          captures the rendered output from a single media resource.  The
+          resulting stream ends when the media element has <a
+          href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">ended
+          playback</a>, or when the media element is changed to render a
+          different resource.
+        </p>
+        <p>
+          <code><dfn>captureStreamUntilEnded</dfn>()</code> operates in the same
+          way that <code><a>captureStream</a>()</code> does, except that when a
+          captured <code>MediaStreamTrack</code> ends for any reason, including
+          a change in a selected track, the track is not removed from the
+          <code>MediaStream</code>.
+        </p>
+        <p>
+          A stream captured with <code>captureStreamUntilEnded()</code> MAY
+          still start with fewer tracks than the media element permits.  The
+          first track of any given type that becomes selected results in a
+          <code>MediaStreamTrack</code> being added to the captured stream.
+          However, if at any point all tracks in the captured stream are ended,
+          the captured stream becomes permanently inactive.  New tracks are not
+          added to the capture, even if they are the first of that type.
+        </p>
+        <p class="Note">
+          This allows for a media element that renders multiple media types to
+          be captured without a complete set of media being present when the
+          capture is initiated.  For instance, a <code>&lt;video&gt;</code>
+          element might initially only render audio, but have a video track
+          added (or selected) after the capture commences.  A late-starting
+          video track would consequently be added to the capture.  However, if
+          the video track commences after the audio track ends, then the video
+          track will not be added to the captured stream.
+        </p>
+      </dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>Security Considerations</h2>
+    <p>
+      Media elements can render media resources from origins that differ from
+      the origin of the media element.  In those cases, the contents of the
+      resulting <code>MediaStream</code> MUST be protected from access by the
+      document origin.
+    </p>
+    <p>
+      How this protection manifests will differ, depending on how the content is
+      accessed.  For instance, rendering inaccessible video to a
+      <code>canvas</code> element [[CANVAS2D]] causes the <var><a
+      href="http://www.w3.org/TR/2dcontext2/#the-image-argument-is-not-origin-clean">origin-clean</a></var>
+      property of the canvas to become <code>false</code>; attempting to create
+      a Web Audio <code>MediaStreamAudioSourceNode</code> [[WEBAUDIO]] succeeds,
+      but produces no information to the document origin (that is, only silence
+      is transmitted into the audio context); attempting to transfer the media
+      using WebRTC [[WEBRTC]] results in no information being transmitted.
+    </p>
+    <p>
+      The origin of the media that is rendered by a media element can change at
+      any time.  This is even the case for a single media resource.  User agents
+      MUST ensure that a change in the origin of media doesn't result in
+      exposure of cross origin content.
+    </p>
+  </section>
+
+  <section>
+    <h2>Change Log</h2>
+
+    <p>
+      This section will be removed before publication.
+    </p>
+
+    <h2>Changes since 2015-tbd-tbd</h2>
+  </section>
+
+  <section class="appendix">
+    <h2>Acknowledgements</h2>
+
+    <p>
+      This document is based on the stream processing specification
+      [[streamproc]] originally developed by Robert O'Callahan.
+    </p>
+  </section>
+</body>
+</html>
