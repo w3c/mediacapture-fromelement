@@ -20,9 +20,10 @@
 <body>
   <section id="abstract">
     <p>
-      This document defines how media that is rendered to a DOM element, such as
-      a <code>&lt;video&gt;</code> or <code>&lt;audio&gt;</code> element, can be
-      captured and rendered into a <code>MediaStream</code> [[!GETUSERMEDIA]].
+      This document defines how a stream of media can be captured from a DOM
+      element, such as a <code>&lt;video&gt;</code>, <code>&lt;audio&gt;</code>,
+      or <code>&lt;canvas&gt;</code> element, in the form of
+      a <code>MediaStream</code> [[!GETUSERMEDIA]].
     </p>
   </section>
 
@@ -30,9 +31,15 @@
     <h2>Introduction</h2>
 
     <p>
-      This document describes an extension to HTML media elements that enables
-      the capture of the media that is rendered into a MediaStream
-      [[GETUSERMEDIA]].  The resulting <code>MediaStream</code> can be passed to
+      This document describes an extension to both HTML media elements and the
+      HTML canvas element that enables the capture of the output of the element
+      in the form of streaming media.
+    </p>
+    <p>
+      The captured media is formed into a <code>MediaStream</code>
+      [[GETUSERMEDIA]], which can then be consumed by the various APIs that
+      process streams of media, such as WebRTC [[WEBRTC]], or Web Audio
+      [[WEBAUDIO]].
     </p>
   </section>
 
@@ -162,6 +169,86 @@
         </p>
       </dd>
     </dl>
+  </section>
+
+  <section>
+    <h2>HTML Canvas Element Media Capture Extensions</h2>
+
+    <p>
+      The <code><a href="#canvas-captureStream">captureStream</a>()</code>
+      method is added to the HTML [[!HTML5]] canvas element.  The resulting
+      <code><a>CanvasCaptureMediaStream</a></code> provides methods that allow
+      for controlling when frames are sampled from the canvas.
+    </p>
+
+    <dl class="idl" title="partial interface HTMLCanvasElement">
+      <dt>CanvasCaptureMediaStream captureStream(optional double frameRate)</dt>
+      <dd>
+        <p>
+          The <code><dfn id="canvas-captureStream">captureStream</dfn>()</code>
+          method produces a real-time video capture of the surface of the
+          canvas.  The resulting media stream has a single video track that
+          matches the dimensions of the canvas element.
+        </p>
+        <p>
+          This method throws a <xref
+          target="http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#securityerror">SecurityError</xref>
+          exception if the canvas is not <dfn><a
+          href="http://www.w3.org/html/wg/drafts/html/master/scripting-1.html#concept-canvas-origin-clean">origin-clean</a></dfn>.
+          The captured stream immediately ceases to capture content from the
+          canvas if the <a>origin-clean</a> flag of the canvas becomes false at
+          any time.
+        </p>
+        <p>
+          A <a>user agent</a> SHOULD <a
+          href="http://www.w3.org/TR/html5/webappapis.html#await-a-stable-state">await
+          a stable state</a> in the script execution of the current page or
+          worker that has control of the canvas before capturing a frame.
+        </p>
+        <p>
+          In order to support manual control of frame capture, browsers MUST
+          support a value of 0 for <code>frameRate</code>.  The captured stream
+          always captures at least one frame, even if <code>frameRate</code> is
+          zero.
+        </p>
+        <p>
+          If the <code>frameRate</code> value is omitted, the <a>user agent</a>
+          SHOULD capture new frames each time that the content of the canvas
+          changes.
+        </p>
+      </dd>
+    </dl>
+
+    <section>
+      <h2>The <code>CanvasCaptureMediaStream</code></h2>
+
+      <p>
+        The <code><dfn>CanvasCaptureMediaStream</dfn></code> is an extension of
+        <code>MediaStream</code> that provide a single
+        <code>requestFrame()</code> method.  Applications that depend on tight
+        control over the rendering of content to the media stream can use this
+        method to control when frames from the canvas are captured.
+      </p>
+
+      <dl class="idl" title="interface CanvasCaptureMediaStream : MediaStream">
+        <dt>readonly attribute HTMLCanvasElement canvas</dt>
+        <dd>
+          The canvas element that this media stream captures.
+        </dd>
+
+        <dt>void requestFrame()</dt>
+        <dd>
+          <p>
+            The <code><dfn>requestFrame</dfn>()</code> method allows
+            applications to manually request that a frame from the canvas be
+            captured and rendered into the media stream.  In cases where
+            applications progressively render to a canvas, this allows
+            applications to avoid capturing a partially rendered frame.
+          </p>
+        </dd>
+      </dl>
+    </section>
+
   </section>
 
   <section>
