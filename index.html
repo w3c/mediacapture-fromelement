@@ -66,6 +66,20 @@
       [[!HTML5]] media elements.
     </p>
 
+    <p>
+      Both <code>MediaStream</code> and <code>HTMLMediaElement</code> expose the
+      concept of a <q>track</q>.  Since there is no common type used for
+      <code>HTMLMediaElement</code>, this document uses the term
+      <dfn>track</dfn> to refer to either <code><dfn><a
+      href="http://www.w3.org/TR/html5/embedded-content-0.html#videotrack">VideoTrack</a></dfn></code>
+      or <code><dfn><a
+      href="http://www.w3.org/TR/html5/embedded-content-0.html#audiotrack">AudioTrack</a></dfn></code>.
+      <code><dfn><a
+      href="https://w3c.github.io/mediacapture-main/#idl-def-MediaStreamTrack">MediaStreamTrack</a></dfn></code>
+      is used to identify the media in a <code><dfn><a
+      href="https://w3c.github.io/mediacapture-main/#idl-def-MediaStream">MediaStream</a></dfn></code>.
+    </p>
+
     <dl class="idl" title="partial interface HTMLMediaElement">
       <dt>MediaStream captureStream()</dt>
       <dd>
@@ -75,22 +89,25 @@
         </p>
         <p>
           The captured <code>MediaStream</code> comprises of
-          <code>MediaStreamTracks</code> that render the content from the set of
+          <code>MediaStreamTrack</code>s that render the content from the set of
           <a
           href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-videotracklist-selectedindex">selected</a>
-          (for video tracks, or other exclusively selected track types) or <a
+          (for <code><a>VideoTrack</a></code>s,
+          or other exclusively selected <a>track</a> types) or <a
           href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-audiotrack-enabled">enabled</a>
-          (for audio tracks, or other track types that support multiple
-          selections) tracks from the media element.  If the media element does
-          not have a selected or enabled tracks of a given type, then no
+          (for <code><a>AudioTrack</a></code>s,
+          or other <a>track</a> types that support multiple selections)
+          <a>track</a>s from the media element.  If the media element does not
+          have a selected or enabled <a>track</a>s of a given type, then no
           <code>MediaStreamTrack</code> is present in the captured stream.
         </p>
         <p>
-          Thus, there at most one of each track type that the media element is
-          capable of rendering.  A <code>&lt;video&gt;</code> element can have
-          both video and audio tracks; an <code>&lt;audio&gt;</code> element can
-          have audio tracks.  In both cases, the set of captured tracks could be
-          empty.
+          A <code>&lt;video&gt;</code> element can therefore capture a video
+          <code>MediaStreamTrack</code> and any number of audio
+          <code>MediaStreamTrack</code>s. An <code>&lt;audio&gt;</code> element
+          can capture any number of audio <code>MediaStreamTrack</code>s.  In
+          both cases, the set of captured <code>MediaStreamTrack</code>s could
+          be empty.
         </p>
         <p>
           <code>captureStream</code> produces a <code>MediaStream</code> that
@@ -103,29 +120,32 @@
           periods where the captured stream has no active media content.
         </p>
         <p>
-          If the selected track changes for the media element,
+          If the selected <a>VideoTrack</a> changes or enabled
+          <a>AudioTrack</a>s change for the media element,
           <code>MediaStreamTrack</code>s are added or removed as necessary to
-          ensure that the tracks in the <code>MediaStream</code> correctly
-          reflect the changes.  Necessary <code><a
+          ensure that the <code>MediaStreamTrack</code>s in the
+          <code>MediaStream</code> correctly reflect the changes.  Necessary
+          <code><a
           href="https://w3c.github.io/mediacapture-main/#event-mediastream-addtrack">addtrack</a></code>
           and <code><a
           href="https://w3c.github.io/mediacapture-main/#event-mediastream-removetrack">removetrack</a></code>
           events are generated to notify applications of these changes.
         </p>
         <p>
-          A captured <code>MediaStreamTrack</code> ends when the track that it
-          captures ends.  Captured <code>MediaStreamTrack</code>s also end when
-          a tracks that are rendered to the media element change, causing the
-          <code>MediaStreamTrack</code> to be removed from the captured stream.
-          That is, when a different video track is selected or the corresponding
-          audio track is disabled.
+          A captured <code>MediaStreamTrack</code> ends when the <a>track</a>
+          that it captures ends.  Captured <code>MediaStreamTrack</code>s also
+          end when <a>track</a>s that are rendered to the media element change,
+          causing the <code>MediaStreamTrack</code> to be removed from the
+          captured stream.  That is, when a different
+          <code><a>VideoTrack</a></code> is selected or the corresponding
+          <code><a>AudioTrack</a></code> is disabled.
         </p>
         <p>
           If media playback is paused, the captured stream continues to produce
           whatever is being actively rendered to the element.  What is rendered
-          to the captured stream will vary based on the type of media; a video
-          track might capture a still frame, or an audio track might capture
-          silence.
+          to the captured stream will vary based on the type of media; a
+          <code><a>VideoTrack</a></code> might capture a still frame, or an
+          <code><a>AudioTrack</a></code> might capture silence.
         </p>
         <p>
           Whether a media element is actively rendering content (e.g., to a
@@ -150,30 +170,34 @@
           <code><dfn>captureStreamUntilEnded</dfn>()</code> operates in the same
           way that <code><a>captureStream</a>()</code> does, except that when a
           captured <code>MediaStreamTrack</code> is removed from the
-          <code>MediaStream</code> no further tracks are added.
+          <code>MediaStream</code> no further <a>track</a>s are added.
         </p>
         <p>
           A stream captured with <code>captureStreamUntilEnded()</code> MAY
-          still start with fewer tracks than the media element permits.  The
-          first track of any given type that becomes selected or enabled results
-          in a <code>MediaStreamTrack</code> being added to the captured stream.
-          Only the first track of a given type is added; new audio tracks that
-          are enabled are not added to the capture.
+          still start with fewer <a>track</a>s than the media element permits.
+          The first <a>track</a> of any given type that becomes selected or
+          enabled results in a <code>MediaStreamTrack</code> being added to the
+          captured stream.  Only the first <a>track</a> of a given type is
+          added; new <code><a>AudioTrack</a></code>s that are enabled are not
+          added to the capture.
         </p>
         <p>
-          Once all tracks in the captured stream have been removed, the captured
-          stream becomes permanently inactive.  New tracks are not added to the
-          capture, even if they are the first of their type.
+          Once all <a>track</a>s in the captured stream have been removed, the
+          captured stream becomes permanently inactive.  New <a>track</a>s are
+          not added to the capture, even if they are the first of their type.
         </p>
         <p class="Note">
           This allows for a media element that renders multiple media types to
           be captured without a complete set of media being present when the
           capture is initiated.  For instance, a <code>&lt;video&gt;</code>
-          element might initially only render audio, but have a video track
-          added (or selected) after the capture commences.  A late-starting
-          video track would consequently be added to the capture.  However, if
-          the video track commences after the audio track ends, then the video
-          track will not be added to the captured stream.
+          element might initially only render audio, but have a
+          <code><a>VideoTrack</a></code> added (or selected) after the capture
+          commences.  A late-starting <code><a>VideoTrack</a></code> would
+          consequently be added to the capture.  However, if the
+          <code><a>VideoTrack</a></code> commences after the
+          <code><a>AudioTrack</a></code> ends, then the
+          <code><a>VideoTrack</a></code> will not be added to the captured
+          <code>MediaStream</code>.
         </p>
       </dd>
     </dl>
@@ -195,7 +219,7 @@
         <p>
           The <code><dfn id="canvas-captureStream">captureStream</dfn>()</code>
           method produces a real-time video capture of the surface of the
-          canvas.  The resulting media stream has a single video track that
+          canvas.  The resulting media stream has a single video <code>MediaStreamTrack</code> that
           matches the dimensions of the canvas element.
         </p>
         <p>
