@@ -78,26 +78,29 @@
           <code>MediaStreamTracks</code> that render the content from the set of
           <a
           href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-videotracklist-selectedindex">selected</a>
-          tracks from the media element.  If the media element does not have a
-          selected track of a given type, then no <code>MediaStreamTrack</code>
-          is present in the captured stream.
+          (for video tracks, or other exclusively selected track types) or <a
+          href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-audiotrack-enabled">enabled</a>
+          (for audio tracks, or other track types that support multiple
+          selections) tracks from the media element.  If the media element does
+          not have a selected or enabled tracks of a given type, then no
+          <code>MediaStreamTrack</code> is present in the captured stream.
         </p>
         <p>
           Thus, there at most one of each track type that the media element is
           capable of rendering.  A <code>&lt;video&gt;</code> element can have
           both video and audio tracks; an <code>&lt;audio&gt;</code> element can
-          have an audio track.  In both cases, the set of captured tracks could
-          be empty.
+          have audio tracks.  In both cases, the set of captured tracks could be
+          empty.
         </p>
         <p>
           <code>captureStream</code> produces a <code>MediaStream</code> that
-          captures any current selected and playing media on the media track.
-          Changes in the media element source do not cause the stream to
-          terminate, though the set of <code>MediaStreamTrack</code>s might
-          change over time.  If the source stream for the media element ends, or
-          the a different source is selected, the <code>MediaStream</code>
-          captures the state of the media element.  This means that there could
-          be periods where the captured stream has no active media content.
+          captures any media that is currently playing on the element.  Changes
+          in the media element source do not cause the stream to terminate,
+          though the set of <code>MediaStreamTrack</code>s might change over
+          time.  If the source stream for the media element ends, or the a
+          different source is selected, the <code>MediaStream</code> captures
+          the state of the media element.  This means that there could be
+          periods where the captured stream has no active media content.
         </p>
         <p>
           If the selected track changes for the media element,
@@ -110,10 +113,12 @@
           events are generated to notify applications of these changes.
         </p>
         <p>
-          Captured <code>MediaStreamTrack</code>s end when the selected track
-          that it captures ends.  Captured <code>MediaStreamTrack</code>s also
-          end when the track selection on the media element changes, causing the
+          A captured <code>MediaStreamTrack</code> ends when the track that it
+          captures ends.  Captured <code>MediaStreamTrack</code>s also end when
+          a tracks that are rendered to the media element change, causing the
           <code>MediaStreamTrack</code> to be removed from the captured stream.
+          That is, when a different video track is selected or the corresponding
+          audio track is disabled.
         </p>
         <p>
           If media playback is paused, the captured stream continues to produce
@@ -144,18 +149,21 @@
         <p>
           <code><dfn>captureStreamUntilEnded</dfn>()</code> operates in the same
           way that <code><a>captureStream</a>()</code> does, except that when a
-          captured <code>MediaStreamTrack</code> ends for any reason, including
-          a change in a selected track, the track is not removed from the
-          <code>MediaStream</code>.
+          captured <code>MediaStreamTrack</code> is removed from the
+          <code>MediaStream</code> no further tracks are added.
         </p>
         <p>
           A stream captured with <code>captureStreamUntilEnded()</code> MAY
           still start with fewer tracks than the media element permits.  The
-          first track of any given type that becomes selected results in a
-          <code>MediaStreamTrack</code> being added to the captured stream.
-          However, if at any point all tracks in the captured stream are ended,
-          the captured stream becomes permanently inactive.  New tracks are not
-          added to the capture, even if they are the first of that type.
+          first track of any given type that becomes selected or enabled results
+          in a <code>MediaStreamTrack</code> being added to the captured stream.
+          Only the first track of a given type is added; new audio tracks that
+          are enabled are not added to the capture.
+        </p>
+        <p>
+          Once all tracks in the captured stream have been removed, the captured
+          stream becomes permanently inactive.  New tracks are not added to the
+          capture, even if they are the first of their type.
         </p>
         <p class="Note">
           This allows for a media element that renders multiple media types to
