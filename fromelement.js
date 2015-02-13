@@ -1,6 +1,6 @@
 var respecConfig = {
   // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
-  specStatus:           "unofficial", // "base",
+  specStatus:           "ED", // "base",
 
   // the specification's short name, as in http://www.w3.org/TR/short-name/
   shortName:            "mediacapture-fromelement",
@@ -22,7 +22,7 @@ var respecConfig = {
   // prevED: "http://dev.w3.org/2011/webrtc/editor/archives/20140321/screenshare.html",
 
   // if there a publicly available Editor's Draft, this is the link
-  //edDraftURI:           "http://dev.w3.org/2011/webrtc/editor/screenshare.html",
+  edDraftURI:           "http://w3c.github.io/mediacapture-fromelement/",
 
   // if this is a LCWD, uncomment and set the end of its review period
   // lcEnd: "2009-08-05",
