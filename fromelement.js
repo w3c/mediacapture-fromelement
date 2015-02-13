@@ -12,11 +12,11 @@ var respecConfig = {
   // publishDate:  "2009-08-06",
 
   // new ability to override the copyright completely
-  overrideCopyright:  "This document is licensed under a <a href='http://creativecommons.org/licenses/by-nd/4.0/legalcode'>Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0) License. </a> Copyright 2014 Mozilla. ",
+  // overrideCopyright:  "This document is licensed under a <a href='http://creativecommons.org/licenses/by-nd/4.0/legalcode'>Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0) License. </a> Copyright 2014 Mozilla. ",
 
   // if the specification's copyright date is a range of years, specify
   // the start date here:
-  // copyrightStart: "2005",
+  copyrightStart: "2015",
 
   // if there is a previously published draft, uncomment this and set its YYYY-MM-DD
   // prevED: "http://dev.w3.org/2011/webrtc/editor/archives/20140321/screenshare.html",
