@@ -161,6 +161,17 @@
           capture to produce silence, nor does hiding the media element suppress
           captured video.
         </p>
+        <p>
+          The source media that is rendered to a <code>HTMLMediaElement</code>
+          can become inaccessible at any time.  For instance, content that is
+          rendered from an HTTP URL can be subject to a redirect on a request
+          for partial content, or the set of active audio tracks can change to
+          include cross origin content.  This condition can be temporary, so
+          ending ending the captured <code><a>MediaStreamTrack</a></code> is not
+          appropriate.  Media captured from a track that is not accessible to
+          the script MUST be replaced with black video, silence or an equivalent
+          form that carries no information.
+        </p>
       </dd>
 
       <dt>MediaStream captureStreamUntilEnded()</dt>
