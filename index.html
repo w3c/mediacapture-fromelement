@@ -230,13 +230,18 @@
           matches the dimensions of the canvas element.
         </p>
         <p>
-          This method throws a <a
-          href="http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#securityerror">SecurityError</a>
-          exception if the canvas is not <dfn><a
-          href="http://www.w3.org/html/wg/drafts/html/master/semantics.html#concept-canvas-origin-clean">origin-clean</a></dfn>.
-          The captured stream immediately ceases to capture content from the
-          canvas if the <a>origin-clean</a> flag of the canvas becomes false at
-          any time.
+          Content from a canvas that is
+          not <dfn><a href="http://www.w3.org/html/wg/drafts/html/master/semantics.html#concept-canvas-origin-clean">origin-clean</a></dfn>
+          MUST NOT be captured.  This method throws
+          a <a href="http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#securityerror">SecurityError</a>
+          exception if the canvas is not <dfn><a>origin-clean</a>.
+        </p>
+        <p>
+          A captured stream MUST immediately cease to capture content if
+          the <a>origin-clean</a> flag of the source canvas becomes false after
+          the stream is created by <code>captureStream()</code>.  The captured
+          stream does not end as a result, but the contents of the canvas MUST
+          be replaced with a frame that is entirely black.
         </p>
         <p>
           A <a>user agent</a> SHOULD <a
