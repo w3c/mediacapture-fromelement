@@ -307,7 +307,7 @@
         <p>
           A new frame is requested from the canvas
           when <code><a>frameCaptureRequested</a></code> is true and the canvas is
-          drawn.  Each time that the captured canvas is drawn, the following
+          painted.  Each time that the captured canvas is painted, the following
           steps are executed:
           <ol>
             <li>
@@ -315,19 +315,15 @@
               following steps:
               <ol>
                 <li>
-                  If the <code><a>frameCaptureRequested</a></code> property
-                  of <var>track</var> is set, add a new frame
-                  to <var>track</var> containing what was drawn to the canvas.
+                  If new content has been drawn to the canvas since it was last
+                  painted, and if the <code><a>frameCaptureRequested</a></code>
+                  internal property of <var>track</var> is set, add a new frame
+                  to <var>track</var> containing what was painted to the canvas.
                 </li>
                 <li>
                   If a <code>frameRate</code> value was specified, set
-                  the <code><a>frameCaptureRequested</a></code> property
-                  of <var>track</var> to <code>false</code>.  As a result,
-                  captures that do not specify a frame rate will capture new
-                  frames each time that the content of the canvas is drawn.
-                  Note that for optimization reasons, a <a>user agent</a> SHOULD
-                  skip capturing a frame if the contents of the canvas have not
-                  changed since the last captured frame.
+                  the <code><a>frameCaptureRequested</a></code> internal
+                  property of <var>track</var> to <code>false</code>.
                 </li>
               </ol>
             </li>
