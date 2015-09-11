@@ -133,17 +133,16 @@
         <p>
           A captured <code>MediaStreamTrack</code> ends
           when <a href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">playback
-          of ends</a> or the source changes.
-          Captured <code>MediaStreamTrack</code>s also end when the set
-          of <a>track</a>s that are rendered to the media element change.
+          ends</a> (and the <code>ended</code> event fires) or when the track
+          that it captures is no longer selected or enabled for playback.  A
+          track is no longer selected or enabled if the source is changed by
+          setting the <code>src</code> or <code>srcObject</code> attributes of
+          the media element.
         </p>
         <p>
           The set of captured <code>MediaStreamTrack</code>s change if the
           source of the media element changes.  If the source for the media
           element ends, or the a different source is selected.
-          The <code>MediaStreamTrack</code>s that comprise the
-          captured <code>MediaStream</code> become muted or unmuted as the
-          tracks they capture also change.
         </p>
         <p>
           If the selected <a>VideoTrack</a> or enabled <a>AudioTrack</a>s for
@@ -154,15 +153,23 @@
           a <code><a href="https://w3c.github.io/mediacapture-main/#event-mediastream-removetrack">removetrack</a></code>
           events is generated for each <a>track</a> that ceases to be selected
           or enabled.  A <code>MediaStreamTrack</code> MUST end prior to being
-          removed from the <code>MediaStream</code>.  Since
-          a <code>MediaStreamTrack</code> can only end once, a track that is
-          enabled, disabled and re-enabled will be captured as two separate
-          tracks.  Seeking without changing track selection does not generate
-          events or cause a captured <code>MediaStreamTrack</code> to end.
+          removed from the <code>MediaStream</code>.
         </p>
         <p>
-          At any time, a media element might not have active content available
-          for capture on a given track for a variety of reasons:
+          Since a <code>MediaStreamTrack</code> can only end once, a track that
+          is enabled, disabled and re-enabled will be captured as two separate
+          tracks.  Similarly, restarting playback after playback ends causes a
+          new set of captured <code>MediaStreamTrack</code> instances to be
+          created.  Seeking during playback without changing track selection
+          does not generate events or cause a
+          captured <code>MediaStreamTrack</code> to end.
+        </p>
+        <p>
+          The <code>MediaStreamTrack</code>s that comprise the
+          captured <code>MediaStream</code> become muted or unmuted as the
+          tracks they capture change state.  At any time, a media element might
+          not have active content available for capture on a given track for a
+          variety of reasons:
         </p>
         <ul>
           <li>
@@ -225,17 +232,17 @@
         <p>
           <code><dfn>captureStreamUntilEnded</dfn>()</code> operates in the same
           way that <code><a>captureStream</a>()</code> does, except that when
-          playback ends, so do all the <code>MediaStreamTrack</code>s in
+          <a href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">playback
+          ends</a>, so do all the <code>MediaStreamTrack</code>s in
           the <code>MediaStream</code>.
         </p>
         <p>
           All <code>MediaStreamTrack</code>s captured
           using <code>captureStreamUntilEnded()</code> end when the media
-          element fires
-          the <a href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">ended</a>
-          event.  After playback has ended, changes to the media element &mdash;
-          such as restarting playback or changing the source media &mdash; do
-          not result in changes to the captured <code>MediaStream</code>.
+          element playback ends.  After playback has ended, changes to the media
+          element &mdash; such as seeking, restarting playback or changing the source
+          media &mdash; do not result in changes to the
+          captured <code>MediaStream</code>.
         </p>
       </dd>
     </dl>
