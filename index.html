@@ -104,9 +104,14 @@
           href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-audiotrack-enabled">enabled</a>
           (for <code><a>AudioTrack</a></code>s,
           or other <a>track</a> types that support multiple selections)
-          <a>track</a>s from the media element.  If the media element does not
-          have a selected or enabled <a>track</a>s of a given type, then no
-          <code>MediaStreamTrack</code> is present in the captured stream.
+          <a>track</a>s from the media element.
+        </p>
+        <p>
+          If the media element does not have a source assigned, then the
+          captured <code>MediaStream</code> has no tracks. Similarly, if the
+          media element does not have a selected or enabled <a>track</a>s of a
+          given type, then no <code>MediaStreamTrack</code> is present in the
+          captured stream.
         </p>
         <p>
           A <code>&lt;video&gt;</code> element can therefore capture a video
