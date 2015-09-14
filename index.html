@@ -107,19 +107,25 @@
           <a>track</a>s from the media element.
         </p>
         <p>
-          If the media element does not have a source assigned, then the
-          captured <code>MediaStream</code> has no tracks. Similarly, if the
-          media element does not have a selected or enabled <a>track</a>s of a
-          given type, then no <code>MediaStreamTrack</code> is present in the
-          captured stream.
-        </p>
-        <p>
           A <code>&lt;video&gt;</code> element can therefore capture a video
           <code>MediaStreamTrack</code> and any number of audio
           <code>MediaStreamTrack</code>s. An <code>&lt;audio&gt;</code> element
           can capture any number of audio <code>MediaStreamTrack</code>s.  In
           both cases, the set of captured <code>MediaStreamTrack</code>s could
           be empty.
+        </p>
+        <p>
+          Unless and until there is a <a>track</a> of given type that is
+          selected or enabled, no <code>MediaStreamTrack</code> of that type is
+          present in the captured stream.  In particular, if the media element
+          does not have a source assigned, then the
+          captured <code>MediaStream</code> has no tracks. Consequently, a media
+          element with a ready state
+          of <a href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-media-have_nothing">HAVE_NOTHING</a>
+          have no captured <code>MediaStreamTrack</code> instances.  Once
+          metadata is available and the selected or enabled <a>track</a>s are
+          determined, new captured <code>MediaStreamTrack</code> instances are
+          created as necessary.
         </p>
         <p>
           <code>captureStream</code> produces a <code>MediaStream</code> that
