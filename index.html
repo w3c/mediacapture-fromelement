@@ -1,423 +1,381 @@
-<!DOCTYPE html>
 <html lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us">
-<head>
-  <link href="fromelement.css" rel="stylesheet" type="text/css" />
-
-  <title>Media Capture from DOM Elements</title>
-  <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-  <script class="remove" src="https://www.w3.org/Tools/respec/respec-w3c-common">
-//<![CDATA[
-  <!-- keep this comment: what a frightening kludge -->
-  //]]>
-  </script>
-  <script class="remove" src="fromelement.js">
-//<![CDATA[
-  <!-- keep this comment -->
-  //]]>
-  </script>
-</head>
-
-<body>
-  <section id="abstract">
-    <p>
-      This document defines how a stream of media can be captured from a DOM
-      element, such as a <code>&lt;video&gt;</code>, <code>&lt;audio&gt;</code>,
-      or <code>&lt;canvas&gt;</code> element, in the form of
-      a <code>MediaStream</code> [[!GETUSERMEDIA]].
-    </p>
-  </section>
-
-    <section id="sotd">
-      <p>This document is not complete. It is subject to major changes and,
-      while early experimentations are encouraged, it is therefore not
-      intended for implementation.</p>
-    </section>
-
-
-  <section class="informative" id="intro">
-    <h2>Introduction</h2>
-
-    <p>
-      This document describes an extension to both HTML media elements and the
-      HTML canvas element that enables the capture of the output of the element
-      in the form of streaming media.
-    </p>
-    <p>
-      The captured media is formed into a <code>MediaStream</code>
-      [[GETUSERMEDIA]], which can then be consumed by the various APIs that
-      process streams of media, such as WebRTC [[WEBRTC]], or Web Audio
-      [[WEBAUDIO]].
-    </p>
-  </section>
-
-  <section id="conformance">
-    <p>
-      This specification defines conformance criteria that apply to a single
-      product: the <dfn>user agent</dfn> that implements the interfaces that it
-      contains.
-    </p>
-    <p>
-      Implementations that use ECMAScript to implement the APIs defined in this
-      specification must implement them in a manner consistent with the
-      ECMAScript Bindings defined in the Web IDL specification [[!WEBIDL]], as
-      this specification uses that specification and terminology.
-    </p>
-  </section>
-
-  <section>
-    <h2>HTML Media Element Media Capture Extensions</h2>
-
-    <p>
-      The <code><a>captureStream</a>()</code> and
-      <code><a>captureStreamUntilEnded</a>()</code> methods are defined on HTML
-      [[!HTML5]] media elements.
-    </p>
-
-    <p>
-      Both <code>MediaStream</code> and <code>HTMLMediaElement</code> expose the
-      concept of a <q>track</q>.  Since there is no common type used for
-      <code>HTMLMediaElement</code>, this document uses the term
-      <dfn>track</dfn> to refer to either <code><dfn><a
-      href="http://www.w3.org/TR/html5/embedded-content-0.html#videotrack">VideoTrack</a></dfn></code>
-      or <code><dfn><a
-      href="http://www.w3.org/TR/html5/embedded-content-0.html#audiotrack">AudioTrack</a></dfn></code>.
-      <code><dfn><a
-      href="https://w3c.github.io/mediacapture-main/#idl-def-MediaStreamTrack">MediaStreamTrack</a></dfn></code>
-      is used to identify the media in a <code><dfn><a
-      href="https://w3c.github.io/mediacapture-main/#idl-def-MediaStream">MediaStream</a></dfn></code>.
-    </p>
-
-    <dl class="idl" title="partial interface HTMLMediaElement">
-      <dt>MediaStream captureStream()</dt>
-      <dd>
-        <p>
-          The <code><dfn>captureStream</dfn>()</code> method produces a
-          real-time capture of the media that is rendered to the media element.
-        </p>
-        <p>
-          The captured <code>MediaStream</code> comprises of
-          <code>MediaStreamTrack</code>s that render the content from the set of
-          <a
-          href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-videotracklist-selectedindex">selected</a>
-          (for <code><a>VideoTrack</a></code>s,
-          or other exclusively selected <a>track</a> types) or <a
-          href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-audiotrack-enabled">enabled</a>
-          (for <code><a>AudioTrack</a></code>s,
-          or other <a>track</a> types that support multiple selections)
-          <a>track</a>s from the media element.  If the media element does not
-          have a selected or enabled <a>track</a>s of a given type, then no
-          <code>MediaStreamTrack</code> of that type is present in the captured
-          stream.
-        </p>
-        <p>
-          A <code>&lt;video&gt;</code> element can therefore capture a video
-          <code>MediaStreamTrack</code> and any number of audio
-          <code>MediaStreamTrack</code>s.  An <code>&lt;audio&gt;</code> element
-          can capture any number of audio <code>MediaStreamTrack</code>s.  In
-          both cases, the set of captured <code>MediaStreamTrack</code>s could
-          be empty.
-        </p>
-        <p>
-          Unless and until there is a <a>track</a> of given type that is
-          selected or enabled, no <code>MediaStreamTrack</code> of that type is
-          present in the captured stream.  In particular, if the media element
-          does not have a source assigned, then the
-          captured <code>MediaStream</code> has no tracks. Consequently, a media
-          element with a ready state
-          of <a href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-media-have_nothing">HAVE_NOTHING</a>
-          produces no captured <code>MediaStreamTrack</code> instances.  Once
-          metadata is available and the selected or enabled <a>track</a>s are
-          determined, new captured <code>MediaStreamTrack</code> instances are
-          created and added to the <code>MediaStream</code>.
-        </p>
-        <p>
-          A captured <code>MediaStreamTrack</code> ends
-          when <a href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">playback
-          ends</a> (and the <code>ended</code> event fires) or when the track
-          that it captures is no longer selected or enabled for playback.  A
-          track is no longer selected or enabled if the source is changed by
-          setting the <code>src</code> or <code>srcObject</code> attributes of
-          the media element.
-        </p>
-        <p>
-          The set of captured <code>MediaStreamTrack</code>s change if the
-          source of the media element changes.  If the source for the media
-          element ends, or the a different source is selected.
-        </p>
-        <p>
-          If the selected <a>VideoTrack</a> or enabled <a>AudioTrack</a>s for
-          the media element change,
-          a <code><a href="https://w3c.github.io/mediacapture-main/#event-mediastream-addtrack">addtrack</a></code>
-          event with a new <code>MediaStreamTrack</code> is generated for
-          each <a>track</a> that was not previously selected or enabled; and
-          a <code><a href="https://w3c.github.io/mediacapture-main/#event-mediastream-removetrack">removetrack</a></code>
-          events is generated for each <a>track</a> that ceases to be selected
-          or enabled.  A <code>MediaStreamTrack</code> MUST end prior to being
-          removed from the <code>MediaStream</code>.
-        </p>
-        <p>
-          Since a <code>MediaStreamTrack</code> can only end once, a track that
-          is enabled, disabled and re-enabled will be captured as two separate
-          tracks.  Similarly, restarting playback after playback ends causes a
-          new set of captured <code>MediaStreamTrack</code> instances to be
-          created.  Seeking during playback without changing track selection
-          does not generate events or cause a
-          captured <code>MediaStreamTrack</code> to end.
-        </p>
-        <p>
-          The <code>MediaStreamTrack</code>s that comprise the
-          captured <code>MediaStream</code> become muted or unmuted as the
-          tracks they capture change state.  At any time, a media element might
-          not have active content available for capture on a given track for a
-          variety of reasons:
-        </p>
-        <ul>
-          <li>
-            Media playback could be paused.
-          </li>
-          <li>
-            A <a>track</a> might not have content for the current playback time
-            if that time is either before the content of that track starts or
-            after the content ends.
-          </li>
-          <li>
-            A <code>MediaStreamTrack</code> that is acting as a source could
-            be <dfn><a href="https://w3c.github.io/mediacapture-main/#track-muted">muted</a></dfn>
-            or <dfn><a href="https://w3c.github.io/mediacapture-main/#track-enabled">disabled</a></dfn>.
-          </li>
-          <li>
-            The contents of the <a>track</a> might become inaccessible to the
-            current origin due to cross-origin protections.  For instance,
-            content that is rendered from an HTTP URL can be subject to a
-            redirect on a request for partial content, or the enabled or
-            selected tracks can change to include cross-origin content.
-          </li>
-        </ul>
-        <p>
-          Absence of content is reflected in captured tracks through
-          the <code><a href="https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack-muted">muted</a></code>
-          attribute.  A captured <code>MediaStreamTrack</code> MUST have
-          a <code><a>muted</a></code> attribute set to <code>true</code> if its
-          corresponding source <a>track</a> does not have available and
-          accessible
-          content. A <code><a href="https://w3c.github.io/mediacapture-main/#event-mediastreamtrack-mute">mute</code>
-          event is raised on the <code>MediaStreamTrack</code> when content
-          availability changes.
-        </p>
-        <p>
-          What output a muted capture produces as a result will vary based on
-          the type of media: a <code><a>VideoTrack</a></code> ceases to capture
-          new frames when muted, causing the captured stream to show the last
-          captured frame; a muted <code><a>AudioTrack</a></code> produces
-          silence.
-        </p>
-        <p>
-          Whether a media element is actively rendering content (e.g., to a
-          screen or audio device) has no effect on the content of captured
-          streams.  Muting the audio on a media element does not cause the
-          capture to produce silence, nor does hiding a media element cause
-          captured video to stop.
-        </p>
-      </dd>
-
-      <dt>MediaStream captureStreamUntilEnded()</dt>
-      <dd>
-        <p>
-          A stream captured using <code>captureStreamUntilEnded()</code>
-          captures the rendered output from a single media resource.  The
-          resulting stream ends when the media element has <a
-          href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">ended
-          playback</a>.
-        </p>
-        <p>
-          <code><dfn>captureStreamUntilEnded</dfn>()</code> operates in the same
-          way that <code><a>captureStream</a>()</code> does, except that when
-          <a href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">playback
-          ends</a>, so do all the <code>MediaStreamTrack</code>s in
-          the <code>MediaStream</code>.
-        </p>
-        <p>
-          All <code>MediaStreamTrack</code>s captured
-          using <code>captureStreamUntilEnded()</code> end when the media
-          element playback ends.  After playback has ended, changes to the media
-          element &mdash; such as seeking, restarting playback or changing the source
-          media &mdash; do not result in changes to the
-          captured <code>MediaStream</code>.
-        </p>
-      </dd>
-    </dl>
-  </section>
-
-  <section>
-    <h2>HTML Canvas Element Media Capture Extensions</h2>
-
-    <p>
-      The <code><a href="#canvas-captureStream">captureStream</a>()</code>
-      method is added to the HTML [[!HTML5]] canvas element.  The resulting
-      <code><a>CanvasCaptureMediaStream</a></code> provides methods that allow
-      for controlling when frames are sampled from the canvas.
-    </p>
-
-    <dl class="idl" title="partial interface HTMLCanvasElement">
-      <dt>CanvasCaptureMediaStream captureStream(optional double frameRate)</dt>
-      <dd>
-        <p>
-          The <code id="canvas-captureStream">captureStream()</code> method
-          produces a real-time video capture of the surface of the canvas.  The
-          resulting media stream has a single
-          video <code>MediaStreamTrack</code> that matches the dimensions of the
-          canvas element.
-        </p>
-        <p>
-          Content from a canvas that is
-          not <dfn><a href="http://www.w3.org/html/wg/drafts/html/master/semantics.html#concept-canvas-origin-clean">origin-clean</a></dfn>
-          MUST NOT be captured.  This method throws
-          a <a href="http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#securityerror">SecurityError</a>
-          exception if the canvas is not <dfn><a>origin-clean</a>.
-        </p>
-        <p>
-          A captured stream MUST immediately cease to capture content if
-          the <a>origin-clean</a> flag of the source canvas becomes false after
-          the stream is created by <code>captureStream()</code>.  The
-          captured <code>MediaStreamTrack</code> MUST become <a>muted</a>,
-          producing no new content while the canvas remains in this state.
-        </p>
-        <p>
-          Each track that captures a canvas has an
-          internal <code><dfn>frameCaptureRequested</dfn></code> property that
-          is set to true when a new frame is requested from the canvas.
-        </p>
-        <p>
-          The value of the <code><a>frameCaptureRequested</a></code> property on
-          all new tracks is set to <code>true</code> when the track is created.
-          On creation of the captured track with a specific,
-          non-zero <code>frameRate</code>, the <a>user agent</a> starts a
-          periodic timer at an interval of <code>1/frameRate</code> seconds.  At
-          each activation of the timer,
-          the <code><a>frameCaptureRequested</a></code> property is set
-          to <code>true</code>.
-        </p>
-        <p>
-          In order to support manual control of frame capture with
-          the <code><a>requestFrame</a>()</code> method, browsers MUST support a
-          value of 0 for <code>frameRate</code>.  However, a captured stream
-          MUST request capture of a frame when created, even
-          if <code>frameRate</code> is zero.
-        </p>
-        <p>
-          A new frame is requested from the canvas
-          when <code><a>frameCaptureRequested</a></code> is true and the canvas is
-          painted.  Each time that the captured canvas is painted, the following
-          steps are executed:
-          <ol>
-            <li>
-              For each <var>track</var> capturing from the canvas execute the
-              following steps:
-              <ol>
-                <li>
-                  If new content has been drawn to the canvas since it was last
-                  painted, and if the <code><a>frameCaptureRequested</a></code>
-                  internal property of <var>track</var> is set, add a new frame
-                  to <var>track</var> containing what was painted to the canvas.
-                </li>
-                <li>
-                  If a <code>frameRate</code> value was specified, set
-                  the <code><a>frameCaptureRequested</a></code> internal
-                  property of <var>track</var> to <code>false</code>.
-                </li>
-              </ol>
-            </li>
-          </ol>
-        </p>
-        <p class="note">
-          This algorithm results in a captured track not starting until
-          something changes in the canvas.
-        </p>
-      </dd>
-    </dl>
-
-    <section>
-      <h2>The <code>CanvasCaptureMediaStream</code></h2>
-
+  <head>
+    <link href="fromelement.css" rel="stylesheet" type="text/css" />
+    <title>
+      Media Capture from DOM Elements
+    </title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <script class="remove" src="https://www.w3.org/Tools/respec/respec-w3c-common">
+    //<![CDATA[
+    <!-- keep this comment: what a frightening kludge -->
+    //]]>
+    </script>
+    <script class="remove" src="fromelement.js">
+    //<![CDATA[
+    <!-- keep this comment -->
+    //]]>
+    </script>
+  </head>
+  <body>
+    <section id="abstract">
       <p>
-        The <code><dfn>CanvasCaptureMediaStream</dfn></code> is an extension of
-        <code>MediaStream</code> that provide a single
-        <code>requestFrame()</code> method.  Applications that depend on tight
-        control over the rendering of content to the media stream can use this
-        method to control when frames from the canvas are captured.
+        This document defines how a stream of media can be captured from a DOM element, such as a
+        <code>&lt;video&gt;</code>, <code>&lt;audio&gt;</code>, or <code>&lt;canvas&gt;</code>
+        element, in the form of a <code>MediaStream</code> [[!GETUSERMEDIA]].
       </p>
-
-      <dl class="idl" title="interface CanvasCaptureMediaStream : MediaStream">
-        <dt>readonly attribute HTMLCanvasElement canvas</dt>
-        <dd>
-          The canvas element that this media stream captures.
-        </dd>
-
-        <dt>void requestFrame()</dt>
+    </section>
+    <section id="sotd">
+      <p>
+        This document is not complete. It is subject to major changes and, while early
+        experimentations are encouraged, it is therefore not intended for implementation.
+      </p>
+    </section>
+    <section class="informative" id="intro">
+      <h2>
+        Introduction
+      </h2>
+      <p>
+        This document describes an extension to both HTML media elements and the HTML canvas
+        element that enables the capture of the output of the element in the form of streaming
+        media.
+      </p>
+      <p>
+        The captured media is formed into a <code>MediaStream</code> [[GETUSERMEDIA]], which can
+        then be consumed by the various APIs that process streams of media, such as WebRTC
+        [[WEBRTC]], or Web Audio [[WEBAUDIO]].
+      </p>
+    </section>
+    <section id="conformance">
+      <p>
+        This specification defines conformance criteria that apply to a single product: the
+        <dfn>user agent</dfn> that implements the interfaces that it contains.
+      </p>
+      <p>
+        Implementations that use ECMAScript to implement the APIs defined in this specification
+        must implement them in a manner consistent with the ECMAScript Bindings defined in the Web
+        IDL specification [[!WEBIDL]], as this specification uses that specification and
+        terminology.
+      </p>
+    </section>
+    <section>
+      <h2>
+        HTML Media Element Media Capture Extensions
+      </h2>
+      <p>
+        The <code><a>captureStream</a>()</code> and <code><a>captureStreamUntilEnded</a>()</code>
+        methods are defined on HTML [[!HTML5]] media elements.
+      </p>
+      <p>
+        Both <code>MediaStream</code> and <code>HTMLMediaElement</code> expose the concept of a
+        <q>track</q>. Since there is no common type used for <code>HTMLMediaElement</code>, this
+        document uses the term <dfn>track</dfn> to refer to either <code><dfn><a href=
+        "http://www.w3.org/TR/html5/embedded-content-0.html#videotrack">VideoTrack</a></dfn></code>
+        or <code><dfn><a href=
+        "http://www.w3.org/TR/html5/embedded-content-0.html#audiotrack">AudioTrack</a></dfn></code>.
+        <code><dfn><a href=
+        "https://w3c.github.io/mediacapture-main/#idl-def-MediaStreamTrack">MediaStreamTrack</a></dfn></code>
+        is used to identify the media in a <code><dfn><a href=
+        "https://w3c.github.io/mediacapture-main/#idl-def-MediaStream">MediaStream</a></dfn></code>.
+      </p>
+      <dl class="idl" title="partial interface HTMLMediaElement">
+        <dt>
+          MediaStream captureStream()
+        </dt>
         <dd>
           <p>
-            The <code><dfn>requestFrame</dfn>()</code> method allows
-            applications to manually request that a frame from the canvas be
-            captured and rendered into the media stream.  In cases where
-            applications progressively render to a canvas, this allows
-            applications to avoid capturing a partially rendered frame.
+            The <code><dfn>captureStream</dfn>()</code> method produces a real-time capture of the
+            media that is rendered to the media element.
           </p>
-          <p class="note">
-            As currently specified, this results in
-            no <code>SecurityError</code> or other error feedback if the canvas
-            is not origin-clean.  In part, this is because we don't track where
-            requests for frames come from.  Do we want to highlight that?
+          <p>
+            The captured <code>MediaStream</code> comprises of <code>MediaStreamTrack</code>s that
+            render the content from the set of <a href=
+            "http://www.w3.org/TR/html5/embedded-content-0.html#dom-videotracklist-selectedindex">selected</a>
+            (for <code><a>VideoTrack</a></code>s, or other exclusively selected <a>track</a> types)
+            or <a href=
+            "http://www.w3.org/TR/html5/embedded-content-0.html#dom-audiotrack-enabled">enabled</a>
+            (for <code><a>AudioTrack</a></code>s, or other <a>track</a> types that support multiple
+            selections) <a>track</a>s from the media element. If the media element does not have a
+            selected or enabled <a>track</a>s of a given type, then no
+            <code>MediaStreamTrack</code> of that type is present in the captured stream.
+          </p>
+          <p>
+            A <code>&lt;video&gt;</code> element can therefore capture a video
+            <code>MediaStreamTrack</code> and any number of audio <code>MediaStreamTrack</code>s.
+            An <code>&lt;audio&gt;</code> element can capture any number of audio
+            <code>MediaStreamTrack</code>s. In both cases, the set of captured
+            <code>MediaStreamTrack</code>s could be empty.
+          </p>
+          <p>
+            Unless and until there is a <a>track</a> of given type that is selected or enabled, no
+            <code>MediaStreamTrack</code> of that type is present in the captured stream. In
+            particular, if the media element does not have a source assigned, then the captured
+            <code>MediaStream</code> has no tracks. Consequently, a media element with a ready
+            state of <a href=
+            "http://www.w3.org/TR/html5/embedded-content-0.html#dom-media-have_nothing">HAVE_NOTHING</a>
+            produces no captured <code>MediaStreamTrack</code> instances. Once metadata is
+            available and the selected or enabled <a>track</a>s are determined, new captured
+            <code>MediaStreamTrack</code> instances are created and added to the
+            <code>MediaStream</code>.
+          </p>
+          <p>
+            A captured <code>MediaStreamTrack</code> ends when <a href=
+            "http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">playback ends</a>
+            (and the <code>ended</code> event fires) or when the track that it captures is no
+            longer selected or enabled for playback. A track is no longer selected or enabled if
+            the source is changed by setting the <code>src</code> or <code>srcObject</code>
+            attributes of the media element.
+          </p>
+          <p>
+            The set of captured <code>MediaStreamTrack</code>s change if the source of the media
+            element changes. If the source for the media element ends, or the a different source is
+            selected.
+          </p>
+          <p>
+            If the selected <a>VideoTrack</a> or enabled <a>AudioTrack</a>s for the media element
+            change, a <code><a href=
+            "https://w3c.github.io/mediacapture-main/#event-mediastream-addtrack">addtrack</a></code>
+            event with a new <code>MediaStreamTrack</code> is generated for each <a>track</a> that
+            was not previously selected or enabled; and a <code><a href=
+            "https://w3c.github.io/mediacapture-main/#event-mediastream-removetrack">removetrack</a></code>
+            events is generated for each <a>track</a> that ceases to be selected or enabled. A
+            <code>MediaStreamTrack</code> MUST end prior to being removed from the
+            <code>MediaStream</code>.
+          </p>
+          <p>
+            Since a <code>MediaStreamTrack</code> can only end once, a track that is enabled,
+            disabled and re-enabled will be captured as two separate tracks. Similarly, restarting
+            playback after playback ends causes a new set of captured <code>MediaStreamTrack</code>
+            instances to be created. Seeking during playback without changing track selection does
+            not generate events or cause a captured <code>MediaStreamTrack</code> to end.
+          </p>
+          <p>
+            The <code>MediaStreamTrack</code>s that comprise the captured <code>MediaStream</code>
+            become muted or unmuted as the tracks they capture change state. At any time, a media
+            element might not have active content available for capture on a given track for a
+            variety of reasons:
+          </p>
+          <ul>
+            <li>Media playback could be paused.
+            </li>
+            <li>A <a>track</a> might not have content for the current playback time if that time is
+            either before the content of that track starts or after the content ends.
+            </li>
+            <li>A <code>MediaStreamTrack</code> that is acting as a source could be <dfn><a href=
+            "https://w3c.github.io/mediacapture-main/#track-muted">muted</a></dfn> or
+              <dfn><a href="https://w3c.github.io/mediacapture-main/#track-enabled">disabled</a></dfn>.
+            </li>
+            <li>The contents of the <a>track</a> might become inaccessible to the current origin
+            due to cross-origin protections. For instance, content that is rendered from an HTTP
+            URL can be subject to a redirect on a request for partial content, or the enabled or
+            selected tracks can change to include cross-origin content.
+            </li>
+          </ul>
+          <p>
+            Absence of content is reflected in captured tracks through the <code><a href=
+            "https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack-muted">muted</a></code>
+            attribute. A captured <code>MediaStreamTrack</code> MUST have a
+            <code><a>muted</a></code> attribute set to <code>true</code> if its corresponding
+            source <a>track</a> does not have available and accessible content. A <code><a href=
+            "https://w3c.github.io/mediacapture-main/#event-mediastreamtrack-mute">mute</a></code>
+            event is raised on the <code>MediaStreamTrack</code> when content availability changes.
+          </p>
+          <p>
+            What output a muted capture produces as a result will vary based on the type of media:
+            a <code><a>VideoTrack</a></code> ceases to capture new frames when muted, causing the
+            captured stream to show the last captured frame; a muted <code><a>AudioTrack</a></code>
+            produces silence.
+          </p>
+          <p>
+            Whether a media element is actively rendering content (e.g., to a screen or audio
+            device) has no effect on the content of captured streams. Muting the audio on a media
+            element does not cause the capture to produce silence, nor does hiding a media element
+            cause captured video to stop.
+          </p>
+        </dd>
+        <dt>
+          MediaStream captureStreamUntilEnded()
+        </dt>
+        <dd>
+          <p>
+            A stream captured using <code>captureStreamUntilEnded()</code> captures the rendered
+            output from a single media resource. The resulting stream ends when the media element
+            has <a href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">ended
+            playback</a>.
+          </p>
+          <p>
+            <code><dfn>captureStreamUntilEnded</dfn>()</code> operates in the same way that
+            <code><a>captureStream</a>()</code> does, except that when <a href=
+            "http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">playback ends</a>,
+            so do all the <code>MediaStreamTrack</code>s in the <code>MediaStream</code>.
+          </p>
+          <p>
+            All <code>MediaStreamTrack</code>s captured using
+            <code>captureStreamUntilEnded()</code> end when the media element playback ends. After
+            playback has ended, changes to the media element — such as seeking, restarting playback
+            or changing the source media — do not result in changes to the captured
+            <code>MediaStream</code>.
           </p>
         </dd>
       </dl>
     </section>
-
-  </section>
-
-  <section>
-    <h2>Security Considerations</h2>
-    <p>
-      Media elements can render media resources from origins that differ from
-      the origin of the media element.  In those cases, the contents of the
-      resulting <code>MediaStream</code> MUST be protected from access by the
-      document origin.
-    </p>
-    <p>
-      How this protection manifests will differ, depending on how the content is
-      accessed.  For instance, rendering inaccessible video to a
-      <code>canvas</code> element [[2DCONTEXT]] causes the <var><a
-      href="http://www.w3.org/TR/2dcontext2/#the-image-argument-is-not-origin-clean">origin-clean</a></var>
-      property of the canvas to become <code>false</code>; attempting to create
-      a Web Audio <code>MediaStreamAudioSourceNode</code> [[WEBAUDIO]] succeeds,
-      but produces no information to the document origin (that is, only silence
-      is transmitted into the audio context); attempting to transfer the media
-      using WebRTC [[WEBRTC]] results in no information being transmitted.
-    </p>
-    <p>
-      The origin of the media that is rendered by a media element can change at
-      any time.  This is even the case for a single media resource.  User agents
-      MUST ensure that a change in the origin of media doesn't result in
-      exposure of cross origin content.
-    </p>
-  </section>
-
-  <section>
-    <h2>Change Log</h2>
-
-    <p>
-      This section will be removed before publication.
-    </p>
-
-    <h2>Changes since 2015-tbd-tbd</h2>
-  </section>
-
-  <section class="appendix">
-    <h2>Acknowledgements</h2>
-
-    <p>
-      This document is based on the stream processing specification
-      [[streamproc]] originally developed by Robert O'Callahan.
-    </p>
-  </section>
-</body>
+    <section>
+      <h2>
+        HTML Canvas Element Media Capture Extensions
+      </h2>
+      <p>
+        The <code><a href="#canvas-captureStream">captureStream</a>()</code> method is added to the
+        HTML [[!HTML5]] canvas element. The resulting <code><a>CanvasCaptureMediaStream</a></code>
+        provides methods that allow for controlling when frames are sampled from the canvas.
+      </p>
+      <dl class="idl" title="partial interface HTMLCanvasElement">
+        <dt>
+          CanvasCaptureMediaStream captureStream(optional double frameRate)
+        </dt>
+        <dd>
+          <p>
+            The <code id="canvas-captureStream">captureStream()</code> method produces a real-time
+            video capture of the surface of the canvas. The resulting media stream has a single
+            video <code>MediaStreamTrack</code> that matches the dimensions of the canvas element.
+          </p>
+          <p>
+            Content from a canvas that is not <dfn><a href=
+            "http://www.w3.org/html/wg/drafts/html/master/semantics.html#concept-canvas-origin-clean">
+            origin-clean</a></dfn> MUST NOT be captured. This method throws a <a href=
+            "http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#securityerror">SecurityError</a>
+            exception if the canvas is not <dfn><a>origin-clean</a>.</dfn>
+          </p>
+          <p>
+            <dfn>A captured stream MUST immediately cease to capture content if the
+            <a>origin-clean</a> flag of the source canvas becomes false after the stream is created
+            by <code>captureStream()</code>. The captured <code>MediaStreamTrack</code> MUST become
+            <a>muted</a>, producing no new content while the canvas remains in this state.</dfn>
+          </p>
+          <p>
+            <dfn>Each track that captures a canvas has an internal
+            <code><dfn>frameCaptureRequested</dfn></code> property that is set to true when a new
+            frame is requested from the canvas.</dfn>
+          </p>
+          <p>
+            The value of the <code><a>frameCaptureRequested</a></code> property on all new tracks
+            is set to <code>true</code> when the track is created. On creation of the captured
+            track with a specific, non-zero <code>frameRate</code>, the <a>user agent</a> starts a
+            periodic timer at an interval of <code>1/frameRate</code> seconds. At each activation
+            of the timer, the <code><a>frameCaptureRequested</a></code> property is set to
+            <code>true</code>.
+          </p>
+          <p>
+            In order to support manual control of frame capture with the
+            <code><a>requestFrame</a>()</code> method, browsers MUST support a value of 0 for
+            <code>frameRate</code>. However, a captured stream MUST request capture of a frame when
+            created, even if <code>frameRate</code> is zero.
+          </p>
+          <p>
+            A new frame is requested from the canvas when <code><a>frameCaptureRequested</a></code>
+            is true and the canvas is painted. Each time that the captured canvas is painted, the
+            following steps are executed:
+          </p>
+          <ol>
+            <li>For each <var>track</var> capturing from the canvas execute the following steps:
+              <ol>
+                <li>If new content has been drawn to the canvas since it was last painted, and if
+                the <code><a>frameCaptureRequested</a></code> internal property of <var>track</var>
+                is set, add a new frame to <var>track</var> containing what was painted to the
+                canvas.
+                </li>
+                <li>If a <code>frameRate</code> value was specified, set the
+                <code><a>frameCaptureRequested</a></code> internal property of <var>track</var> to
+                <code>false</code>.
+                </li>
+              </ol>
+            </li>
+          </ol>
+          <p class="note">
+            This algorithm results in a captured track not starting until something changes in the
+            canvas.
+          </p>
+        </dd>
+      </dl>
+      <section>
+        <h2>
+          The <code>CanvasCaptureMediaStream</code>
+        </h2>
+        <p>
+          The <code><dfn>CanvasCaptureMediaStream</dfn></code> is an extension of
+          <code>MediaStream</code> that provide a single <code>requestFrame()</code> method.
+          Applications that depend on tight control over the rendering of content to the media
+          stream can use this method to control when frames from the canvas are captured.
+        </p>
+        <dl class="idl" title="interface CanvasCaptureMediaStream : MediaStream">
+          <dt>
+            readonly attribute HTMLCanvasElement canvas
+          </dt>
+          <dd>
+            The canvas element that this media stream captures.
+          </dd>
+          <dt>
+            void requestFrame()
+          </dt>
+          <dd>
+            <p>
+              The <code><dfn>requestFrame</dfn>()</code> method allows applications to manually
+              request that a frame from the canvas be captured and rendered into the media stream.
+              In cases where applications progressively render to a canvas, this allows
+              applications to avoid capturing a partially rendered frame.
+            </p>
+            <p class="note">
+              As currently specified, this results in no <code>SecurityError</code> or other error
+              feedback if the canvas is not origin-clean. In part, this is because we don't track
+              where requests for frames come from. Do we want to highlight that?
+            </p>
+          </dd>
+        </dl>
+      </section>
+    </section>
+    <section>
+      <h2>
+        Security Considerations
+      </h2>
+      <p>
+        Media elements can render media resources from origins that differ from the origin of the
+        media element. In those cases, the contents of the resulting <code>MediaStream</code> MUST
+        be protected from access by the document origin.
+      </p>
+      <p>
+        How this protection manifests will differ, depending on how the content is accessed. For
+        instance, rendering inaccessible video to a <code>canvas</code> element [[2DCONTEXT]]
+        causes the <var><a href=
+        "http://www.w3.org/TR/2dcontext2/#the-image-argument-is-not-origin-clean">origin-clean</a></var>
+        property of the canvas to become <code>false</code>; attempting to create a Web Audio
+        <code>MediaStreamAudioSourceNode</code> [[WEBAUDIO]] succeeds, but produces no information
+        to the document origin (that is, only silence is transmitted into the audio context);
+        attempting to transfer the media using WebRTC [[WEBRTC]] results in no information being
+        transmitted.
+      </p>
+      <p>
+        The origin of the media that is rendered by a media element can change at any time. This is
+        even the case for a single media resource. User agents MUST ensure that a change in the
+        origin of media doesn't result in exposure of cross origin content.
+      </p>
+    </section>
+    <section>
+      <h2>
+        Change Log
+      </h2>
+      <p>
+        This section will be removed before publication.
+      </p>
+      <h2>
+        Changes since 2015-tbd-tbd
+      </h2>
+    </section>
+    <section class="appendix">
+      <h2>
+        Acknowledgements
+      </h2>
+      <p>
+        This document is based on the stream processing specification [[streamproc]] originally
+        developed by Robert O'Callahan.
+      </p>
+    </section>
+  </body>
 </html>
