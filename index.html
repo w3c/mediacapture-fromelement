@@ -104,12 +104,15 @@
           href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-audiotrack-enabled">enabled</a>
           (for <code><a>AudioTrack</a></code>s,
           or other <a>track</a> types that support multiple selections)
-          <a>track</a>s from the media element.
+          <a>track</a>s from the media element.  If the media element does not
+          have a selected or enabled <a>track</a>s of a given type, then no
+          <code>MediaStreamTrack</code> of that type is present in the captured
+          stream.
         </p>
         <p>
           A <code>&lt;video&gt;</code> element can therefore capture a video
           <code>MediaStreamTrack</code> and any number of audio
-          <code>MediaStreamTrack</code>s. An <code>&lt;audio&gt;</code> element
+          <code>MediaStreamTrack</code>s.  An <code>&lt;audio&gt;</code> element
           can capture any number of audio <code>MediaStreamTrack</code>s.  In
           both cases, the set of captured <code>MediaStreamTrack</code>s could
           be empty.
@@ -122,66 +125,98 @@
           captured <code>MediaStream</code> has no tracks. Consequently, a media
           element with a ready state
           of <a href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-media-have_nothing">HAVE_NOTHING</a>
-          have no captured <code>MediaStreamTrack</code> instances.  Once
+          produces no captured <code>MediaStreamTrack</code> instances.  Once
           metadata is available and the selected or enabled <a>track</a>s are
           determined, new captured <code>MediaStreamTrack</code> instances are
-          created as necessary.
+          created and added to the <code>MediaStream</code>.
         </p>
         <p>
-          <code>captureStream</code> produces a <code>MediaStream</code> that
-          captures any media that is currently playing on the element.  Changes
-          in the media element source do not cause the stream to terminate,
-          though the set of <code>MediaStreamTrack</code>s might change over
-          time.  If the source stream for the media element ends, or the a
-          different source is selected, the <code>MediaStream</code> captures
-          the state of the media element.  This means that there could be
-          periods where the captured stream has no active media content.
+          A captured <code>MediaStreamTrack</code> ends
+          when <a href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">playback
+          ends</a> (and the <code>ended</code> event fires) or when the track
+          that it captures is no longer selected or enabled for playback.  A
+          track is no longer selected or enabled if the source is changed by
+          setting the <code>src</code> or <code>srcObject</code> attributes of
+          the media element.
         </p>
         <p>
-          If the selected <a>VideoTrack</a> changes or enabled
-          <a>AudioTrack</a>s change for the media element,
-          <code>MediaStreamTrack</code>s are added or removed as necessary to
-          ensure that the <code>MediaStreamTrack</code>s in the
-          <code>MediaStream</code> correctly reflect the changes.  Necessary
-          <code><a
-          href="https://w3c.github.io/mediacapture-main/#event-mediastream-addtrack">addtrack</a></code>
-          and <code><a
-          href="https://w3c.github.io/mediacapture-main/#event-mediastream-removetrack">removetrack</a></code>
-          events are generated to notify applications of these changes.
+          The set of captured <code>MediaStreamTrack</code>s change if the
+          source of the media element changes.  If the source for the media
+          element ends, or the a different source is selected.
         </p>
         <p>
-          A captured <code>MediaStreamTrack</code> ends when the <a>track</a>
-          that it captures ends.  Captured <code>MediaStreamTrack</code>s also
-          end when <a>track</a>s that are rendered to the media element change,
-          causing the <code>MediaStreamTrack</code> to be removed from the
-          captured stream.  That is, when a different
-          <code><a>VideoTrack</a></code> is selected or the corresponding
-          <code><a>AudioTrack</a></code> is disabled.
+          If the selected <a>VideoTrack</a> or enabled <a>AudioTrack</a>s for
+          the media element change,
+          a <code><a href="https://w3c.github.io/mediacapture-main/#event-mediastream-addtrack">addtrack</a></code>
+          event with a new <code>MediaStreamTrack</code> is generated for
+          each <a>track</a> that was not previously selected or enabled; and
+          a <code><a href="https://w3c.github.io/mediacapture-main/#event-mediastream-removetrack">removetrack</a></code>
+          events is generated for each <a>track</a> that ceases to be selected
+          or enabled.  A <code>MediaStreamTrack</code> MUST end prior to being
+          removed from the <code>MediaStream</code>.
         </p>
         <p>
-          If media playback is paused, the captured stream continues to produce
-          whatever is being actively rendered to the element.  What is rendered
-          to the captured stream will vary based on the type of media; a
-          <code><a>VideoTrack</a></code> might capture a still frame, or an
-          <code><a>AudioTrack</a></code> might capture silence.
+          Since a <code>MediaStreamTrack</code> can only end once, a track that
+          is enabled, disabled and re-enabled will be captured as two separate
+          tracks.  Similarly, restarting playback after playback ends causes a
+          new set of captured <code>MediaStreamTrack</code> instances to be
+          created.  Seeking during playback without changing track selection
+          does not generate events or cause a
+          captured <code>MediaStreamTrack</code> to end.
+        </p>
+        <p>
+          The <code>MediaStreamTrack</code>s that comprise the
+          captured <code>MediaStream</code> become muted or unmuted as the
+          tracks they capture change state.  At any time, a media element might
+          not have active content available for capture on a given track for a
+          variety of reasons:
+        </p>
+        <ul>
+          <li>
+            Media playback could be paused.
+          </li>
+          <li>
+            A <a>track</a> might not have content for the current playback time
+            if that time is either before the content of that track starts or
+            after the content ends.
+          </li>
+          <li>
+            A <code>MediaStreamTrack</code> that is acting as a source could
+            be <dfn><a href="https://w3c.github.io/mediacapture-main/#track-muted">muted</a></dfn>
+            or <dfn><a href="https://w3c.github.io/mediacapture-main/#track-enabled">disabled</a></dfn>.
+          </li>
+          <li>
+            The contents of the <a>track</a> might become inaccessible to the
+            current origin due to cross-origin protections.  For instance,
+            content that is rendered from an HTTP URL can be subject to a
+            redirect on a request for partial content, or the enabled or
+            selected tracks can change to include cross-origin content.
+          </li>
+        </ul>
+        <p>
+          Absence of content is reflected in captured tracks through
+          the <code><a href="https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack-muted">muted</a></code>
+          attribute.  A captured <code>MediaStreamTrack</code> MUST have
+          a <code><a>muted</a></code> attribute set to <code>true</code> if its
+          corresponding source <a>track</a> does not have available and
+          accessible
+          content. A <code><a href="https://w3c.github.io/mediacapture-main/#event-mediastreamtrack-mute">mute</code>
+          event is raised on the <code>MediaStreamTrack</code> when content
+          availability changes.
+        </p>
+        <p>
+          What output a muted capture produces as a result will vary based on
+          the type of media: a <code><a>VideoTrack</a></code> ceases to capture
+          new frames when muted, causing the captured stream to show the last
+          captured frame; a muted <code><a>AudioTrack</a></code> produces
+          silence.
         </p>
         <p>
           Whether a media element is actively rendering content (e.g., to a
           screen or audio device) has no effect on the content of captured
           streams.  Muting the audio on a media element does not cause the
-          capture to produce silence, nor does hiding the media element suppress
-          captured video.
-        </p>
-        <p>
-          The source media that is rendered to a <code>HTMLMediaElement</code>
-          can become inaccessible at any time.  For instance, content that is
-          rendered from an HTTP URL can be subject to a redirect on a request
-          for partial content, or the set of active audio tracks can change to
-          include cross origin content.  This condition can be temporary, so
-          ending ending the captured <code><a>MediaStreamTrack</a></code> is not
-          appropriate.  Media captured from a track that is not accessible to
-          the script MUST be replaced with black video, silence or an equivalent
-          form that carries no information.
+          capture to produce silence, nor does hiding a media element cause
+          captured video to stop.
         </p>
       </dd>
 
@@ -192,41 +227,22 @@
           captures the rendered output from a single media resource.  The
           resulting stream ends when the media element has <a
           href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">ended
-          playback</a>, or when the media element is changed to render a
-          different resource.
+          playback</a>.
         </p>
         <p>
           <code><dfn>captureStreamUntilEnded</dfn>()</code> operates in the same
-          way that <code><a>captureStream</a>()</code> does, except that when a
-          captured <code>MediaStreamTrack</code> is removed from the
-          <code>MediaStream</code> no further <a>track</a>s are added.
+          way that <code><a>captureStream</a>()</code> does, except that when
+          <a href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">playback
+          ends</a>, so do all the <code>MediaStreamTrack</code>s in
+          the <code>MediaStream</code>.
         </p>
         <p>
-          A stream captured with <code>captureStreamUntilEnded()</code> MAY
-          still start with fewer <a>track</a>s than the media element permits.
-          The first <a>track</a> of any given type that becomes selected or
-          enabled results in a <code>MediaStreamTrack</code> being added to the
-          captured stream.  Only the first <a>track</a> of a given type is
-          added; new <code><a>AudioTrack</a></code>s that are enabled are not
-          added to the capture.
-        </p>
-        <p>
-          Once all <a>track</a>s in the captured stream have been removed, the
-          captured stream becomes permanently inactive.  New <a>track</a>s are
-          not added to the capture, even if they are the first of their type.
-        </p>
-        <p class="Note">
-          This allows for a media element that renders multiple media types to
-          be captured without a complete set of media being present when the
-          capture is initiated.  For instance, a <code>&lt;video&gt;</code>
-          element might initially only render audio, but have a
-          <code><a>VideoTrack</a></code> added (or selected) after the capture
-          commences.  A late-starting <code><a>VideoTrack</a></code> would
-          consequently be added to the capture.  However, if the
-          <code><a>VideoTrack</a></code> commences after the
-          <code><a>AudioTrack</a></code> ends, then the
-          <code><a>VideoTrack</a></code> will not be added to the captured
-          <code>MediaStream</code>.
+          All <code>MediaStreamTrack</code>s captured
+          using <code>captureStreamUntilEnded()</code> end when the media
+          element playback ends.  After playback has ended, changes to the media
+          element &mdash; such as seeking, restarting playback or changing the source
+          media &mdash; do not result in changes to the
+          captured <code>MediaStream</code>.
         </p>
       </dd>
     </dl>
@@ -246,10 +262,11 @@
       <dt>CanvasCaptureMediaStream captureStream(optional double frameRate)</dt>
       <dd>
         <p>
-          The <code id="canvas-captureStream">captureStream()</code>
-          method produces a real-time video capture of the surface of the
-          canvas.  The resulting media stream has a single video <code>MediaStreamTrack</code> that
-          matches the dimensions of the canvas element.
+          The <code id="canvas-captureStream">captureStream()</code> method
+          produces a real-time video capture of the surface of the canvas.  The
+          resulting media stream has a single
+          video <code>MediaStreamTrack</code> that matches the dimensions of the
+          canvas element.
         </p>
         <p>
           Content from a canvas that is
@@ -261,9 +278,9 @@
         <p>
           A captured stream MUST immediately cease to capture content if
           the <a>origin-clean</a> flag of the source canvas becomes false after
-          the stream is created by <code>captureStream()</code>.  The captured
-          stream does not end as a result, but the contents of the canvas MUST
-          be replaced with a frame that is entirely black.
+          the stream is created by <code>captureStream()</code>.  The
+          captured <code>MediaStreamTrack</code> MUST become <a>muted</a>,
+          producing no new content while the canvas remains in this state.
         </p>
         <p>
           A <a>user agent</a> SHOULD <a
@@ -272,10 +289,11 @@
           worker that has control of the canvas before capturing a frame.
         </p>
         <p>
-          In order to support manual control of frame capture, browsers MUST
-          support a value of 0 for <code>frameRate</code>.  The captured stream
-          always captures at least one frame, even if <code>frameRate</code> is
-          zero.
+          In order to support manual control of frame capture with
+          the <code><a>requestFrame</a>()</code> method, browsers MUST support a
+          value of 0 for <code>frameRate</code>.  However, a captured stream
+          MUST request capture of a frame when created, even
+          if <code>frameRate</code> is zero.
         </p>
         <p>
           If the <code>frameRate</code> value is omitted, the <a>user agent</a>
@@ -310,6 +328,12 @@
             captured and rendered into the media stream.  In cases where
             applications progressively render to a canvas, this allows
             applications to avoid capturing a partially rendered frame.
+          </p>
+          <p class="note">
+            As currently specified, this results in
+            no <code>SecurityError</code> or other error feedback if the canvas
+            is not origin-clean.  In part, this is because we don't track where
+            requests for frames come from.  Do we want to highlight that?
           </p>
         </dd>
       </dl>
