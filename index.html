@@ -283,10 +283,19 @@
           producing no new content while the canvas remains in this state.
         </p>
         <p>
-          A <a>user agent</a> SHOULD <a
-          href="http://www.w3.org/TR/html5/webappapis.html#await-a-stable-state">await
-          a stable state</a> in the script execution of the current page or
-          worker that has control of the canvas before capturing a frame.
+          Each track that captures a canvas has an
+          internal <code><dfn>frameCaptureRequested</dfn></code> property that
+          is set to true when a new frame is requested from the canvas.
+        </p>
+        <p>
+          The value of the <code><a>frameCaptureRequested</a></code> property on
+          all new tracks is set to <code>true</code> when the track is created.
+          On creation of the captured track with a specific,
+          non-zero <code>frameRate</code>, the <a>user agent</a> starts a
+          periodic timer at an interval of <code>1/frameRate</code> seconds.  At
+          each activation of the timer,
+          the <code><a>frameCaptureRequested</a></code> property is set
+          to <code>true</code>.
         </p>
         <p>
           In order to support manual control of frame capture with
@@ -296,9 +305,33 @@
           if <code>frameRate</code> is zero.
         </p>
         <p>
-          If the <code>frameRate</code> value is omitted, the <a>user agent</a>
-          SHOULD capture new frames each time that the content of the canvas
-          changes.
+          A new frame is requested from the canvas
+          when <code><a>frameCaptureRequested</a></code> is true and the canvas is
+          painted.  Each time that the captured canvas is painted, the following
+          steps are executed:
+          <ol>
+            <li>
+              For each <var>track</var> capturing from the canvas execute the
+              following steps:
+              <ol>
+                <li>
+                  If new content has been drawn to the canvas since it was last
+                  painted, and if the <code><a>frameCaptureRequested</a></code>
+                  internal property of <var>track</var> is set, add a new frame
+                  to <var>track</var> containing what was painted to the canvas.
+                </li>
+                <li>
+                  If a <code>frameRate</code> value was specified, set
+                  the <code><a>frameCaptureRequested</a></code> internal
+                  property of <var>track</var> to <code>false</code>.
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </p>
+        <p class="note">
+          This algorithm results in a captured track not starting until
+          something changes in the canvas.
         </p>
       </dd>
     </dl>
