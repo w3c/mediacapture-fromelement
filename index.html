@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us">
   <head>
     <link href="fromelement.css" rel="stylesheet" type="text/css" />
@@ -322,11 +323,13 @@
               In cases where applications progressively render to a canvas, this allows
               applications to avoid capturing a partially rendered frame.
             </p>
-            <p class="note">
-              As currently specified, this results in no <code>SecurityError</code> or other error
-              feedback if the canvas is not origin-clean. In part, this is because we don't track
-              where requests for frames come from. Do we want to highlight that?
-            </p>
+            <div class="note">
+              <p>
+                As currently specified, this results in no <code>SecurityError</code> or other
+                error feedback if the canvas is not origin-clean. In part, this is because we don't
+                track where requests for frames come from. Do we want to highlight that?
+              </p>
+            </div>
           </dd>
         </dl>
       </section>
