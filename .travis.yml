@@ -7,10 +7,13 @@ install:
  - cd widlproc && make obj/widlproc && cd ..
  - pip install html5lib lxml html5validator
  - sudo apt-get install libwww-perl libcss-dom-perl
+ - wget http://www.cmake.org/files/v3.3/cmake-3.3.1-Linux-x86_64.tar.gz && tar xzf cmake-3.3.1-Linux-x86_64.tar.gz && rm -f cmake-3.3.1-Linux-x86_64.tar.gz
+ - make cmake="$PWD/cmake-3.3.1-Linux-x86_64/bin/cmake" install_tidy
 script:
  - mkdir build && cd build && ln -s ../fromelement.css . && cd ..
  - phantomjs --ssl-protocol=tlsv1 respec/tools/respec2html.js -e -w index.html build/output.html
  - python webidl-checker/webidl-check build/output.html
  - "! (perl -T linkchecker/bin/checklink -S 0  -q -b build/output.html |grep  \"^\")"
  - html5validator --root build/
+ - make check
 env: WIDLPROC_PATH=$TRAVIS_BUILD_DIR/widlproc/obj/widlproc
