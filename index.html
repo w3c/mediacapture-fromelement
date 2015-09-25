@@ -243,18 +243,18 @@
             "http://www.w3.org/html/wg/drafts/html/master/semantics.html#concept-canvas-origin-clean">
             origin-clean</a></dfn> MUST NOT be captured. This method throws a <a href=
             "http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#securityerror">SecurityError</a>
-            exception if the canvas is not <dfn><a>origin-clean</a>.</dfn>
+            exception if the canvas is not <a>origin-clean</a>.
           </p>
           <p>
-            <dfn>A captured stream MUST immediately cease to capture content if the
+            A captured stream MUST immediately cease to capture content if the
             <a>origin-clean</a> flag of the source canvas becomes false after the stream is created
             by <code>captureStream()</code>. The captured <code>MediaStreamTrack</code> MUST become
-            <a>muted</a>, producing no new content while the canvas remains in this state.</dfn>
+            <a>muted</a>, producing no new content while the canvas remains in this state.
           </p>
           <p>
-            <dfn>Each track that captures a canvas has an internal
+            Each track that captures a canvas has an internal
             <code><dfn>frameCaptureRequested</dfn></code> property that is set to true when a new
-            frame is requested from the canvas.</dfn>
+            frame is requested from the canvas.
           </p>
           <p>
             The value of the <code><a>frameCaptureRequested</a></code> property on all new tracks
