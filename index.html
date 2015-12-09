@@ -261,19 +261,19 @@
     <p>
       The <code><a href="#canvas-captureStream">captureStream</a>()</code>
       method is added to the HTML [[!HTML5]] canvas element.  The resulting
-      <code><a>CanvasCaptureMediaStream</a></code> provides methods that allow
-      for controlling when frames are sampled from the canvas.
+      <code><a>CanvasCaptureMediaStreamTrack</a></code> provides methods that
+      allow for controlling when frames are sampled from the canvas.
     </p>
 
     <dl class="idl" title="partial interface HTMLCanvasElement">
-      <dt>CanvasCaptureMediaStream captureStream(optional double frameRate)</dt>
+      <dt>MediaStream captureStream(optional double frameRate)</dt>
       <dd>
         <p>
           The <code id="canvas-captureStream">captureStream()</code> method
           produces a real-time video capture of the surface of the canvas.  The
           resulting media stream has a single
-          video <code>MediaStreamTrack</code> that matches the dimensions of the
-          canvas element.
+          video <code><a>CanvasCaptureMediaStreamTrack</a></code> that matches
+          the dimensions of the canvas element.
         </p>
         <p>
           Content from a canvas that is
@@ -344,17 +344,17 @@
     </dl>
 
     <section>
-      <h2>The <code>CanvasCaptureMediaStream</code></h2>
+      <h2>The <code>CanvasCaptureMediaStreamTrack</code></h2>
 
       <p>
-        The <code><dfn>CanvasCaptureMediaStream</dfn></code> is an extension of
-        <code>MediaStream</code> that provide a single
+        The <code><dfn>CanvasCaptureMediaStreamTrack</dfn></code> is an
+        extension of <code>MediaStreamTrack</code> that provide a single
         <code>requestFrame()</code> method.  Applications that depend on tight
         control over the rendering of content to the media stream can use this
         method to control when frames from the canvas are captured.
       </p>
 
-      <dl class="idl" title="interface CanvasCaptureMediaStream : MediaStream">
+      <dl class="idl" title="interface CanvasCaptureMediaStreamTrack : MediaStreamTrack">
         <dt>readonly attribute HTMLCanvasElement canvas</dt>
         <dd>
           The canvas element that this media stream captures.
@@ -365,9 +365,9 @@
           <p>
             The <code><dfn>requestFrame</dfn>()</code> method allows
             applications to manually request that a frame from the canvas be
-            captured and rendered into the media stream.  In cases where
-            applications progressively render to a canvas, this allows
-            applications to avoid capturing a partially rendered frame.
+            captured and rendered into the track.  In cases where applications
+            progressively render to a canvas, this allows applications to avoid
+            capturing a partially rendered frame.
           </p>
           <p class="note">
             As currently specified, this results in
@@ -386,8 +386,8 @@
     <p>
       Media elements can render media resources from origins that differ from
       the origin of the media element.  In those cases, the contents of the
-      resulting <code>MediaStream</code> MUST be protected from access by the
-      document origin.
+      resulting <code>MediaStreamTrack</code> MUST be protected from access by
+      the document origin.
     </p>
     <p>
       How this protection manifests will differ, depending on how the content is
