@@ -218,6 +218,13 @@
           capture to produce silence, nor does hiding a media element cause
           captured video to stop.
         </p>
+        <p>
+          Captured audio from an element with
+          an <a href="http://www.w3.org/TR/html5/embedded-content-0.html#effective-playback-rate">effective
+          playback rate</a> other than 1.0 MUST be time-stretched.  An
+          unplayable playback rate causes the captured audio track to become
+          muted.
+        </p>
       </dd>
 
       <dt>MediaStream captureStreamUntilEnded()</dt>
