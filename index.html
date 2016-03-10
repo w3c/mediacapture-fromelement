@@ -142,7 +142,7 @@
         <p>
           The set of captured <code>MediaStreamTrack</code>s change if the
           source of the media element changes.  If the source for the media
-          element ends, or the a different source is selected.
+          element ends, a different source is selected.
         </p>
         <p>
           If the selected <a>VideoTrack</a> or enabled <a>AudioTrack</a>s for
@@ -310,6 +310,11 @@
           value of 0 for <code>frameRate</code>.  However, a captured stream
           MUST request capture of a frame when created, even
           if <code>frameRate</code> is zero.
+        </p>
+        <p>
+          This method throws
+          a <a href="http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#notsupportederror">NotSupportedError</a>
+          if <code>frameRate</code> is negative.
         </p>
         <p>
           A new frame is requested from the canvas
