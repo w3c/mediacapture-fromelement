@@ -200,7 +200,7 @@
           a <code><a>muted</a></code> attribute set to <code>true</code> if its
           corresponding source <a>track</a> does not have available and
           accessible
-          content. A <code><a href="https://w3c.github.io/mediacapture-main/#event-mediastreamtrack-mute">mute</code>
+          content. A <code><a href="https://w3c.github.io/mediacapture-main/#event-mediastreamtrack-mute">mute</a></code>
           event is raised on the <code>MediaStreamTrack</code> when content
           availability changes.
         </p>
@@ -280,7 +280,7 @@
           not <dfn><a href="http://www.w3.org/html/wg/drafts/html/master/semantics.html#concept-canvas-origin-clean">origin-clean</a></dfn>
           MUST NOT be captured.  This method throws
           a <a href="http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#securityerror">SecurityError</a>
-          exception if the canvas is not <dfn><a>origin-clean</a>.
+          exception if the canvas is not <a>origin-clean</a>.
         </p>
         <p>
           A captured stream MUST immediately cease to capture content if
@@ -321,26 +321,26 @@
           when <code><a>frameCaptureRequested</a></code> is true and the canvas is
           painted.  Each time that the captured canvas is painted, the following
           steps are executed:
-          <ol>
-            <li>
-              For each <var>track</var> capturing from the canvas execute the
-              following steps:
-              <ol>
-                <li>
-                  If new content has been drawn to the canvas since it was last
-                  painted, and if the <code><a>frameCaptureRequested</a></code>
-                  internal property of <var>track</var> is set, add a new frame
-                  to <var>track</var> containing what was painted to the canvas.
-                </li>
-                <li>
-                  If a <code>frameRate</code> value was specified, set
-                  the <code><a>frameCaptureRequested</a></code> internal
-                  property of <var>track</var> to <code>false</code>.
-                </li>
-              </ol>
-            </li>
-          </ol>
         </p>
+        <ol>
+          <li>
+            For each <var>track</var> capturing from the canvas execute the
+            following steps:
+            <ol>
+              <li>
+                If new content has been drawn to the canvas since it was last
+                painted, and if the <code><a>frameCaptureRequested</a></code>
+                internal property of <var>track</var> is set, add a new frame
+                to <var>track</var> containing what was painted to the canvas.
+              </li>
+              <li>
+                If a <code>frameRate</code> value was specified, set
+                the <code><a>frameCaptureRequested</a></code> internal
+                property of <var>track</var> to <code>false</code>.
+              </li>
+            </ol>
+          </li>
+        </ol>
         <p class="note">
           This algorithm results in a captured track not starting until
           something changes in the canvas.
