@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="en-us" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us">
+<html lang="en-us">
 <head>
-  <link href="fromelement.css" rel="stylesheet" type="text/css" />
+  <link href="fromelement.css" rel="stylesheet" type="text/css">
 
   <title>Media Capture from DOM Elements</title>
-  <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
   <script class="remove" src="https://www.w3.org/Tools/respec/respec-w3c-common">
 //<![CDATA[
   <!-- keep this comment: what a frightening kludge -->
   //]]>
   </script>
-  <script class="remove" src="fromelement.js">
+    <script class="remove" src="fromelement.js">
 //<![CDATA[
   <!-- keep this comment -->
   //]]>
-  </script>
+    </script>
 </head>
 
 <body>
@@ -76,19 +76,16 @@
       Both <code>MediaStream</code> and <code>HTMLMediaElement</code> expose the
       concept of a <q>track</q>.  Since there is no common type used for
       <code>HTMLMediaElement</code>, this document uses the term
-      <dfn>track</dfn> to refer to either <code><dfn><a
-      href="http://www.w3.org/TR/html5/embedded-content-0.html#videotrack">VideoTrack</a></dfn></code>
-      or <code><dfn><a
-      href="http://www.w3.org/TR/html5/embedded-content-0.html#audiotrack">AudioTrack</a></dfn></code>.
-      <code><dfn><a
-      href="https://w3c.github.io/mediacapture-main/#idl-def-MediaStreamTrack">MediaStreamTrack</a></dfn></code>
-      is used to identify the media in a <code><dfn><a
-      href="https://w3c.github.io/mediacapture-main/#idl-def-MediaStream">MediaStream</a></dfn></code>.
+      <dfn>track</dfn> to refer to either <code><dfn><a href="http://www.w3.org/TR/html5/embedded-content-0.html#videotrack">VideoTrack</a></dfn></code>
+      or <code><dfn><a href="http://www.w3.org/TR/html5/embedded-content-0.html#audiotrack">AudioTrack</a></dfn></code>.
+      <code><dfn><a href="https://w3c.github.io/mediacapture-main/#idl-def-MediaStreamTrack">MediaStreamTrack</a></dfn></code>
+      is used to identify the media in a <code><dfn><a href="https://w3c.github.io/mediacapture-main/#idl-def-MediaStream">MediaStream</a></dfn></code>.
     </p>
 
-    <dl class="idl" title="partial interface HTMLMediaElement">
-      <dt>MediaStream captureStream()</dt>
-      <dd>
+    <div><pre class="idl">partial interface HTMLMediaElement {
+    MediaStream captureStream ();
+    MediaStream captureStreamUntilEnded ();
+};</pre><section><h2>Methods</h2><dl data-link-for="HTMLMediaElement" data-dfn-for="HTMLMediaElement" class="methods"><dt><code>captureStream</code></dt><dd>
         <p>
           The <code><dfn>captureStream</dfn>()</code> method produces a
           real-time capture of the media that is rendered to the media element.
@@ -96,11 +93,9 @@
         <p>
           The captured <code>MediaStream</code> comprises of
           <code>MediaStreamTrack</code>s that render the content from the set of
-          <a
-          href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-videotracklist-selectedindex">selected</a>
+          <a href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-videotracklist-selectedindex">selected</a>
           (for <code><a>VideoTrack</a></code>s,
-          or other exclusively selected <a>track</a> types) or <a
-          href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-audiotrack-enabled">enabled</a>
+          or other exclusively selected <a>track</a> types) or <a href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-audiotrack-enabled">enabled</a>
           (for <code><a>AudioTrack</a></code>s,
           or other <a>track</a> types that support multiple selections)
           <a>track</a>s from the media element.  If the media element does not
@@ -239,9 +234,9 @@
       allow for controlling when frames are sampled from the canvas.
     </p>
 
-    <dl class="idl" title="partial interface HTMLCanvasElement">
-      <dt>MediaStream captureStream(optional double frameRate)</dt>
-      <dd>
+    <div><pre class="idl">partial interface HTMLCanvasElement {
+    MediaStream captureStream (optional double frameRate);
+};</pre><section><h2>Methods</h2><dl data-link-for="HTMLCanvasElement" data-dfn-for="HTMLCanvasElement" class="methods"><dt><dfn><code>captureStream</code></dfn></dt><dd>
         <p>
           The <code id="canvas-captureStream">captureStream()</code> method
           produces a real-time video capture of the surface of the canvas.  The
@@ -319,8 +314,7 @@
           This algorithm results in a captured track not starting until
           something changes in the canvas.
         </p>
-      </dd>
-    </dl>
+      <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">frameRate</td><td class="prmType"><code>double</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptTrue"><span role="img" aria-label="True">✔</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>MediaStream</code></div></dd></dl></section></div>
 
     <section>
       <h2>The <code>CanvasCaptureMediaStreamTrack</code></h2>
@@ -333,14 +327,12 @@
         method to control when frames from the canvas are captured.
       </p>
 
-      <dl class="idl" title="interface CanvasCaptureMediaStreamTrack : MediaStreamTrack">
-        <dt>readonly attribute HTMLCanvasElement canvas</dt>
-        <dd>
+      <div><pre class="idl">interface CanvasCaptureMediaStreamTrack : MediaStreamTrack {
+    readonly        attribute HTMLCanvasElement canvas;
+    void requestFrame ();
+};</pre><section><h2>Attributes</h2><dl data-link-for="CanvasCaptureMediaStreamTrack" data-dfn-for="CanvasCaptureMediaStreamTrack" class="attributes"><dt><dfn><code>canvas</code></dfn> of type <span class="idlAttrType"><a>HTMLCanvasElement</a></span>, readonly       </dt><dd>
           The canvas element that this media stream captures.
-        </dd>
-
-        <dt>void requestFrame()</dt>
-        <dd>
+        </dd></dl></section><section><h2>Methods</h2><dl data-link-for="CanvasCaptureMediaStreamTrack" data-dfn-for="CanvasCaptureMediaStreamTrack" class="methods"><dt><code>requestFrame</code></dt><dd>
           <p>
             The <code><dfn>requestFrame</dfn>()</code> method allows
             applications to manually request that a frame from the canvas be
@@ -354,8 +346,7 @@
             is not origin-clean.  In part, this is because we don't track where
             requests for frames come from.  Do we want to highlight that?
           </p>
-        </dd>
-      </dl>
+        <div><em>No parameters.</em></div><div><em>Return type: </em><code>void</code></div></dd></dl></section></div>
     </section>
 
   </section>
@@ -371,8 +362,7 @@
     <p>
       How this protection manifests will differ, depending on how the content is
       accessed.  For instance, rendering inaccessible video to a
-      <code>canvas</code> element [[2DCONTEXT]] causes the <var><a
-      href="http://www.w3.org/TR/2dcontext2/#the-image-argument-is-not-origin-clean">origin-clean</a></var>
+      <code>canvas</code> element [[2DCONTEXT]] causes the <var><a href="http://www.w3.org/TR/2dcontext2/#the-image-argument-is-not-origin-clean">origin-clean</a></var>
       property of the canvas to become <code>false</code>; attempting to create
       a Web Audio <code>MediaStreamAudioSourceNode</code> [[WEBAUDIO]] succeeds,
       but produces no information to the document origin (that is, only silence
@@ -405,5 +395,6 @@
       [[streamproc]] originally developed by Robert O'Callahan.
     </p>
   </section>
-</body>
-</html>
+
+
+</body></html>
