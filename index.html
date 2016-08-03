@@ -68,9 +68,8 @@
     <h2>HTML Media Element Media Capture Extensions</h2>
 
     <p>
-      The <code><a>captureStream</a>()</code> and
-      <code><a>captureStreamUntilEnded</a>()</code> methods are defined on HTML
-      [[!HTML5]] media elements.
+      Method <code><a>captureStream</a>()</code>is defined on HTML [[!HTML5]]
+      media elements.
     </p>
 
     <p>
@@ -227,31 +226,6 @@
         </p>
       </dd>
 
-      <dt>MediaStream captureStreamUntilEnded()</dt>
-      <dd>
-        <p>
-          A stream captured using <code>captureStreamUntilEnded()</code>
-          captures the rendered output from a single media resource.  The
-          resulting stream ends when the media element has <a
-          href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">ended
-          playback</a>.
-        </p>
-        <p>
-          <code><dfn>captureStreamUntilEnded</dfn>()</code> operates in the same
-          way that <code><a>captureStream</a>()</code> does, except that when
-          <a href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">playback
-          ends</a>, so do all the <code>MediaStreamTrack</code>s in
-          the <code>MediaStream</code>.
-        </p>
-        <p>
-          All <code>MediaStreamTrack</code>s captured
-          using <code>captureStreamUntilEnded()</code> end when the media
-          element playback ends.  After playback has ended, changes to the media
-          element &mdash; such as seeking, restarting playback or changing the source
-          media &mdash; do not result in changes to the
-          captured <code>MediaStream</code>.
-        </p>
-      </dd>
     </dl>
   </section>
 
