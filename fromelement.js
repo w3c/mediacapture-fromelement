@@ -37,7 +37,25 @@ var respecConfig = {
   editors:  [
     // { name: "Your Name", url: "http://example.org/",
     // company: "Your Company", companyURL: "http://example.com/" },
-    { name: "Martin Thomson", company: "Mozilla", w3cid: 68503 },
+    {
+        name: "Martin Thomson",
+        company: "Mozilla",
+        w3cid: 68503
+    }, {
+        name: "Miguel Casas-Sanchez",
+        company: "Google, Inc.",
+        companyURL: "http://www.google.com",
+        url: "mailto:mcasas@chromium.org?subject=MediaCapture%20fromElement%20W3C%20Spec",
+        w3cid: 82825,
+        note: "Media Element parts."
+    }, {
+        name: "Emircan Uysaler",
+        company: "Google, Inc.",
+        companyURL: "http://www.google.com",
+        url: "mailto:emircan@chromium.org?subject=MediaCapture%20fromElement%20W3C%20Spec",
+        w3cid: 89334,
+        note: "Canvas Element parts."
+    }
   ],
 
   // authors, add as many as you like.
