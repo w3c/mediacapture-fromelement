@@ -59,13 +59,13 @@ partial interface HTMLMediaElement {
   <dt><dfn method for="HTMLMediaElement"><code>captureStream()</code></dfn></dt>
   <dd><code>captureStream()</code> method produces a real-time capture of the media that is rendered to the media element.
 
-  The captured {{MediaStream}} comprises of {{MediaStreamTrack}}s that render the content from the set of <a href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-videotracklist-selectedindex">selected</a> (for {{VideoTrack}}s, or other exclusively selected <a>track</a> types) or <a href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-audiotrack-enabled">enabled</a> (for {{AudioTrack}}s, or other <a>track</a> types that support multiple selections) <a>track</a>s from the media element.  If the media element does not have a selected or enabled <a>track</a>s of a given type, then no {{MediaStreamTrack}} of that type is present in the captured stream.
+  The captured {{MediaStream}} comprises of {{MediaStreamTrack}}s that render the content from the set of {{VideoTrack.selected}} (for {{VideoTrack}}s, or other exclusively selected <a>track</a> types) or {{AudioTrack.enabled}} (for {{AudioTrack}}s, or other <a>track</a> types that support multiple selections) <a>track</a>s from the media element.  If the media element does not have a selected or enabled <a>track</a>s of a given type, then no {{MediaStreamTrack}} of that type is present in the captured stream.
 
   A <code>&lt;video&gt;</code> element can therefore capture a video {{MediaStreamTrack}} and any number of audio {{MediaStreamTrack}}s.  An <code>&lt;audio&gt;</code> element can capture any number of audio {{MediaStreamTrack}}s.  In both cases, the set of captured {{MediaStreamTrack}}s could be empty.
 
-  Unless and until there is a <a>track</a> of given type that is selected or enabled, no {{MediaStreamTrack}} of that type is present in the captured stream.  In particular, if the media element does not have a source assigned, then the captured {{MediaStream}} has no tracks. Consequently, a media element with a ready state of <a href="http://www.w3.org/TR/html5/embedded-content-0.html#dom-media-have_nothing">HAVE_NOTHING</a> produces no captured {{MediaStreamTrack}} instances.  Once metadata is available and the selected or enabled <a>track</a>s are determined, new captured {{MediaStreamTrack}} instances are created and added to the {{MediaStream}}.
+  Unless and until there is a <a>track</a> of given type that is selected or enabled, no {{MediaStreamTrack}} of that type is present in the captured stream.  In particular, if the media element does not have a source assigned, then the captured {{MediaStream}} has no tracks. Consequently, a media element with a ready state of {{HTMLMediaElement/HAVE_NOTHING}} produces no captured {{MediaStreamTrack}} instances.  Once metadata is available and the selected or enabled <a>track</a>s are determined, new captured {{MediaStreamTrack}} instances are created and added to the {{MediaStream}}.
 
-  A captured {{MediaStreamTrack}} ends when <a href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">playback ends</a> (and the <code>ended</code> event fires) or when the track that it captures is no longer selected or enabled for playback.  A track is no longer selected or enabled if the source is changed by setting the <code>src</code> or <code>srcObject</code> attributes of the media element.
+  A captured {{MediaStreamTrack}} ends when <a href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">playback ends</a> (and the {{HTMLMediaElement/ended}} event fires) or when the track that it captures is no longer selected or enabled for playback.  A track is no longer selected or enabled if the source is changed by setting the {{HTMLMediaElement/src}} or {{HTMLMediaElement/srcObject}} attributes of the media element.
 
   The set of captured {{MediaStreamTrack}}s change if the source of the media element changes.  If the source for the media element ends, a different source is selected.
 
@@ -181,7 +181,6 @@ The origin of the media that is rendered by a media element can change at any ti
 # Acknowledgements # {#acknowledgements}
 
 This document is based on the stream processing specification [[streamproc]] originally developed by Robert O'Callahan.
-
 
 <pre class="anchors">
 urlPrefix: https://www.w3.org/TR/mediacapture-streams/#; type: interface; text: MediaStream; url: mediastream
