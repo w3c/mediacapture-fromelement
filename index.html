@@ -306,6 +306,12 @@
                   </ol>
                 </li>
               </ol>
+              <p>
+                When adding new frames to <var>track</var> containing what was painted to the
+                canvas, alpha channel content of the canvas must be captured and preserved if the
+                canvas is not fully opaque. The consumers of this <code>track</code> might not
+                preserve the alpha channel.
+              </p>
               <p class="note">
                 This algorithm results in a captured track not starting until something changes in
                 the canvas.
