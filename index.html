@@ -58,17 +58,22 @@
         terminology.
       </p>
     </section>
-    <section>
+    <section data-link-for="HTMLMediaElement" data-dfn-for="HTMLMediaElement">
       <h2>
         HTML Media Element Media Capture Extensions
       </h2>
       <p>
         Method <code><a>captureStream</a>()</code>is defined on HTML [[!HTML5]] media elements.
+        Methods for capture are added to both <code><dfn><a href=
+        "https://www.w3.org/TR/html5/embedded-content-0.html#htmlmediaelement">HTMLMediaElement</a></dfn></code>
+        and <code><dfn><a href=
+        "https://www.w3.org/TR/html5/scripting-1.html#htmlcanvaselement">HTMLCanvasElement</a></dfn></code>.
       </p>
       <p>
-        Both <code>MediaStream</code> and <code>HTMLMediaElement</code> expose the concept of a
-        <q>track</q>. Since there is no common type used for <code>HTMLMediaElement</code>, this
-        document uses the term <dfn>track</dfn> to refer to either <code><dfn><a href=
+        Both <code>MediaStream</code> and <code><a>HTMLMediaElement</a></code> expose the concept
+        of a <q>track</q>. Since there is no common type used for
+        <code><a>HTMLMediaElement</a></code>, this document uses the term <dfn>track</dfn> to refer
+        to either <code><dfn><a href=
         "http://www.w3.org/TR/html5/embedded-content-0.html#videotrack">VideoTrack</a></dfn></code>
         or <code><dfn><a href=
         "http://www.w3.org/TR/html5/embedded-content-0.html#audiotrack">AudioTrack</a></dfn></code>.
@@ -84,14 +89,14 @@
         <section>
           <h2>
             Methods
-          </h2>i
-          <dl data-link-for="HTMLMediaElement" data-dfn-for="HTMLMediaElement" class="methods">
+          </h2>
+          <dl class="methods">
             <dt>
               <code>captureStream</code>
             </dt>
             <dd>
               <p>
-                The <code><dfn>captureStream</dfn>()</code> method produces a real-time capture of
+                The <code><dfn>captureStream()</dfn></code> method produces a real-time capture of
                 the media that is rendered to the media element.
               </p>
               <p>
@@ -213,15 +218,14 @@
         </section>
       </div>
     </section>
-    <section>
+    <section data-link-for="HTMLCanvasElement" data-dfn-for="HTMLCanvasElement">
       <h2>
         HTML Canvas Element Media Capture Extensions
       </h2>
       <p>
-        The <code><a href="#canvas-captureStream">captureStream</a>()</code> method is added to the
-        HTML [[!HTML5]] canvas element. The resulting
-        <code><a>CanvasCaptureMediaStreamTrack</a></code> provides methods that allow for
-        controlling when frames are sampled from the canvas.
+        The <code><a>captureStream()</a></code> method is added to the HTML [[!HTML5]] canvas
+        element. The resulting <code><a>CanvasCaptureMediaStreamTrack</a></code> provides methods
+        that allow for controlling when frames are sampled from the canvas.
       </p>
       <div>
         <pre class="idl">partial interface HTMLCanvasElement {
@@ -231,16 +235,16 @@
           <h2>
             Methods
           </h2>
-          <dl data-link-for="HTMLCanvasElement" data-dfn-for="HTMLCanvasElement" class="methods">
+          <dl class="methods">
             <dt>
-              <dfn><code>captureStream</code></dfn>
+              <code>captureStream</code>
             </dt>
             <dd>
               <p>
-                The <code id="canvas-captureStream">captureStream()</code> method produces a
-                real-time video capture of the surface of the canvas. The resulting media stream
-                has a single video <code><a>CanvasCaptureMediaStreamTrack</a></code> that matches
-                the dimensions of the canvas element.
+                The <code><dfn>captureStream()</dfn></code> method produces a real-time video
+                capture of the surface of the canvas. The resulting media stream has a single video
+                <code><a>CanvasCaptureMediaStreamTrack</a></code> that matches the dimensions of
+                the canvas element.
               </p>
               <p>
                 Content from a canvas that is not <dfn><a href=
