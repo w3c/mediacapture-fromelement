@@ -22,7 +22,7 @@ var respecConfig = {
   // prevED: "http://dev.w3.org/2011/webrtc/editor/archives/20140321/screenshare.html",
 
   // if there a publicly available Editor's Draft, this is the link
-  edDraftURI:           "http://w3c.github.io/mediacapture-fromelement/",
+  edDraftURI:           "https://w3c.github.io/mediacapture-fromelement/",
 
   // if this is a LCWD, uncomment and set the end of its review period
   // lcEnd: "2009-08-05",
@@ -37,7 +37,25 @@ var respecConfig = {
   editors:  [
     // { name: "Your Name", url: "http://example.org/",
     // company: "Your Company", companyURL: "http://example.com/" },
-    { name: "Martin Thomson", company: "Mozilla" },
+    {
+        name: "Martin Thomson",
+        company: "Mozilla",
+        w3cid: 68503
+    }, {
+        name: "Miguel Casas-Sanchez",
+        company: "Google, Inc.",
+        companyURL: "http://www.google.com",
+        url: "mailto:mcasas@chromium.org?subject=MediaCapture%20fromElement%20W3C%20Spec",
+        w3cid: 82825,
+        note: "Media Element parts."
+    }, {
+        name: "Emircan Uysaler",
+        company: "Google, Inc.",
+        companyURL: "http://www.google.com",
+        url: "mailto:emircan@chromium.org?subject=MediaCapture%20fromElement%20W3C%20Spec",
+        w3cid: 89334,
+        note: "Canvas Element parts."
+    }
   ],
 
   // authors, add as many as you like.
@@ -50,10 +68,10 @@ var respecConfig = {
   //],
 
   // name of the WG
-  wg: ["Web Real-Time Communication Working Group", "Device APIs Working Group"]          ,
+  wg: ["Device and Sensors Working Group", "Web Real-Time Communications Working Group"],
 
   // URI of the public WG page
-  wgURI:["http://www.w3.org/2011/04/webrtc/","http://www.w3.org/2009/dap"],
+  wgURI: ["https://www.w3.org/2009/dap/", "https://www.w3.org/2011/04/webrtc/"],
 
   // name (without the @w3.org) of the public mailing to which comments are due
   wgPublicList: "public-media-capture",
@@ -63,7 +81,7 @@ var respecConfig = {
   // This is important for Rec-track documents, do not copy a patent URI from a random
   // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
   // Team Contact.
-  wgPatentURI:   ["http://www.w3.org/2004/01/pp-impl/47318/status","http://www.w3.org/2004/01/pp-impl/43696/status"],
+  wgPatentURI: ["https://www.w3.org/2004/01/pp-impl/43696/status", "https://www.w3.org/2004/01/pp-impl/47318/status"],
 
   otherLinks: [
     {
@@ -71,7 +89,7 @@ var respecConfig = {
       data: [
         {
           value: "Mailing list",
-          href: "http://lists.w3.org/Archives/Public/public-media-capture/"
+          href: "https://lists.w3.org/Archives/Public/public-media-capture/"
         },
         {
           value: "Browse open issues",
