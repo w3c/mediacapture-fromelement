@@ -230,7 +230,7 @@
       </p>
       <div>
         <pre class="idl">partial interface HTMLCanvasElement {
-    MediaStream captureStream (optional double frameRate);
+    MediaStream captureStream (optional double frameRequestRate);
 };</pre>
         <section>
           <h2>
@@ -269,21 +269,21 @@
               <p>
                 The value of the <code><a>frameCaptureRequested</a></code> property on all new
                 tracks is set to <code>true</code> when the track is created. On creation of the
-                captured track with a specific, non-zero <code>frameRate</code>, the <a>user
-                agent</a> starts a periodic timer at an interval of <code>1/frameRate</code>
+                captured track with a specific, non-zero <code>frameRequestRate</code>, the <a>user
+                agent</a> starts a periodic timer at an interval of <code>1/frameRequestRate</code>
                 seconds. At each activation of the timer, the
                 <code><a>frameCaptureRequested</a></code> property is set to <code>true</code>.
               </p>
               <p>
                 In order to support manual control of frame capture with the
                 <code><a>requestFrame</a>()</code> method, browsers MUST support a value of 0 for
-                <code>frameRate</code>. However, a captured stream MUST request capture of a frame
-                when created, even if <code>frameRate</code> is zero.
+                <code>frameRequestRate</code>. However, a captured stream MUST request capture of a
+                frame when created, even if <code>frameRequestRate</code> is zero.
               </p>
               <p>
                 This method throws a <a href=
                 "http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#notsupportederror">
-                NotSupportedError</a> if <code>frameRate</code> is negative.
+                NotSupportedError</a> if <code>frameRequestRate</code> is negative.
               </p>
               <p>
                 A new frame is requested from the canvas when
@@ -299,7 +299,7 @@
                     <var>track</var> is set, add a new frame to <var>track</var> containing what
                     was painted to the canvas.
                     </li>
-                    <li>If a <code>frameRate</code> value was specified, set the
+                    <li>If a <code>frameRequestRate</code> value was specified, set the
                     <code><a>frameCaptureRequested</a></code> internal property of <var>track</var>
                     to <code>false</code>.
                     </li>
@@ -337,7 +337,7 @@
                   </tr>
                   <tr>
                     <td class="prmName">
-                      frameRate
+                      frameRequestRate
                     </td>
                     <td class="prmType">
                       <code>double</code>
