@@ -65,13 +65,13 @@ partial interface HTMLMediaElement {
 
   Unless and until there is a <a>track</a> of given type that is selected or enabled, no {{MediaStreamTrack}} of that type is present in the captured stream.  In particular, if the media element does not have a source assigned, then the captured {{MediaStream}} has no tracks. Consequently, a media element with a ready state of {{HTMLMediaElement/HAVE_NOTHING}} produces no captured {{MediaStreamTrack}} instances.  Once metadata is available and the selected or enabled <a>track</a>s are determined, new captured {{MediaStreamTrack}} instances are created and added to the {{MediaStream}}.
 
-  A captured {{MediaStreamTrack}} ends when <a href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">playback ends</a> (and the {{HTMLMediaElement/ended}} event fires) or when the track that it captures is no longer selected or enabled for playback.  A track is no longer selected or enabled if the source is changed by setting the {{HTMLMediaElement/src}} or {{HTMLMediaElement/srcObject}} attributes of the media element.
+  A captured {{MediaStreamTrack}} ends when <a href="http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">playback ends</a> (and the {{HTMLMediaElement/ended}} event fires) or when the <a>track</a> that it captures is no longer selected or enabled for playback.  A <a>track</a> is no longer selected or enabled if the source is changed by setting the {{HTMLMediaElement/src}} or {{HTMLMediaElement/srcObject}} attributes of the media element. The steps in {{stop()}} are performed on the {{MediaStreamTrack}} when it ends.
 
   The set of captured {{MediaStreamTrack}}s change if the source of the media element changes.  If the source for the media element ends, a different source is selected.
 
-  If the selected {{VideoTrack}} or enabled {{AudioTrack}}s for the media element change, an {{addtrack}} event with a new {{MediaStreamTrack}} is generated for each <a>track</a> that was not previously selected or enabled; and a {{removetrack}} event is generated for each <a>track</a> that ceases to be selected or enabled.  A {{MediaStreamTrack}} MUST end prior to being removed from the {{MediaStream}}.
+  If the selected {{VideoTrack}} or enabled {{AudioTrack}}s for the media element change, an {{addtrack}} event with a new {{MediaStreamTrack}} is generated for each <a>track</a> that was not previously selected or enabled; and a {{removetrack}} event is generated for each <a>track</a> that ceases to be selected or enabled.  A {{MediaStreamTrack}} MUST be {{ended}} prior to being removed from the {{MediaStream}}.
 
-  Since a {{MediaStreamTrack}} can only end once, a track that is enabled, disabled and re-enabled will be captured as two separate tracks.  Similarly, restarting playback after playback ends causes a new set of captured {{MediaStreamTrack}} instances to be created.  Seeking during playback without changing track selection does not generate events or cause a captured {{MediaStreamTrack}} to end.
+  Since a {{MediaStreamTrack}} can only end once, a <a>track</a> that is enabled, disabled and re-enabled will be captured as two separate tracks.  Similarly, restarting playback after playback ends causes a new set of captured {{MediaStreamTrack}} instances to be created.  Seeking during playback without changing track selection does not generate events or cause a captured {{MediaStreamTrack}} to end.
 
   The {{MediaStreamTrack}}s that comprise the captured {{MediaStream}} become {{muted}} or not {{muted}} as the tracks they capture change state. At any time, a media element might not have active content available for capture on a given track for a variety of reasons:
 
@@ -85,32 +85,32 @@ partial interface HTMLMediaElement {
     <li>The contents of the <a>track</a> might become inaccessible to the current origin due to cross-origin protections.  For instance, content that is rendered from an HTTP URL can be subject to a redirect on a request for partial content, or the enabled or selected tracks can change to include cross-origin content.</li>
   </ul>
 
-  Absence of content is reflected in captured tracks through the {{muted}} attribute.  A captured {{MediaStreamTrack}} MUST have a {{muted}} attribute set to <code>true</code> if its corresponding source <a>track</a> does not have available and accessible content. An event named {{onmute}} is raised on the {{MediaStreamTrack}} when content availability changes.
+  Absence of content is reflected in captured tracks through the {{muted}} attribute.  A captured {{MediaStreamTrack}} MUST have a {{muted}} attribute set to <code>true</code> if its corresponding source <a>track</a> does not have available and accessible content. An event named {{mute}} is raised on the {{MediaStreamTrack}} when content availability changes.
 
   What output a muted capture produces as a result will vary based on the type of media: a {{VideoTrack}} ceases to capture new frames when muted, causing the captured stream to show the last captured frame; a muted {{AudioTrack}} produces silence.
 
   Whether a media element is actively rendering content (e.g., to a screen or audio device) has no effect on the content of captured streams.  Muting the audio on a media element does not cause the capture to produce silence, nor does hiding a media element cause captured video to stop.
 
-  Captured audio from an element with an <a href="http://www.w3.org/TR/html5/embedded-content-0.html#effective-playback-rate">effective playback rate</a> other than 1.0 MUST be time-stretched.  An unplayable playback rate causes the captured audio track to become muted.
+  Captured audio from an element with an <a href="http://www.w3.org/TR/html5/embedded-content-0.html#effective-playback-rate">effective playback rate</a> other than 1.0 MUST be time-stretched.  An unplayable playback rate causes the captured audio track to become {{muted}}.
   </dd>
 </dl>
 
 
 # HTML Canvas Element Media Capture Extensions # {#canvascapture}
 
-The {{HTMLCanvasElement/captureStream()}} method is added to the {{HTMLCanvasElement}}.  The resulting {{MediaStream}} is composed of a single {{CanvasCaptureMediaStreamTrack}} that provides methods that allow for controlling when frames are sampled from the canvas.
+The {{HTMLCanvasElement/captureStream()}} method is added to the {{HTMLCanvasElement}}.  The resulting {{CanvasCaptureMediaStreamTrack}} provides methods that allow for controlling when frames are sampled from the canvas.
 
 <div><pre class="idl">
 partial interface HTMLCanvasElement {
-    MediaStream captureStream(optional double frameRate);
+    MediaStream captureStream(optional double frameRequestRate);
 };
 </pre>
 
 ## Methods ## {##canvascapture-methods}
 
 <dl class="domintro">
-  <dt><dfn method for="HTMLCanvasElement"><code>captureStream(optional double frameRate)</code></dfn></dt>
-  <dd>This method produces a real-time video capture of the surface of the canvas.  The resulting media stream has a single video {{CanvasCaptureMediaStreamTrack}} that matches the dimensions of the canvas element.
+  <dt><dfn method for="HTMLCanvasElement"><code>captureStream(optional double frameRequestRate)</code></dfn></dt>
+  <dd>This method produces a real-time video capture of the surface of the canvas.  The resulting {{MediaStream}} has a single video {{CanvasCaptureMediaStreamTrack}} that matches the dimensions of the canvas element.
 
   Content from a canvas that is not <a>origin-clean</a> MUST NOT be captured.  This method throws a {{SecurityError}} exception if the canvas is not <a>origin-clean</a>.
 
@@ -118,24 +118,26 @@ partial interface HTMLCanvasElement {
 
   Each track that captures a canvas has an internal <code><dfn>frameCaptureRequested</dfn></code> property that is set to true when a new frame is requested from the canvas.
 
-  The value of the <code><a>frameCaptureRequested</a></code> property on all new tracks is set to <code>true</code> when the track is created. On creation of the captured track with a specific, non-zero {{frameRate}}, the user agent starts a periodic timer at an interval of <code>1/{{frameRate}}</code> seconds.  At each activation of the timer, the <code><a>frameCaptureRequested</a></code> property is set to <code>true</code>.
+  The value of the <code><a>frameCaptureRequested</a></code> property on all new tracks is set to <code>true</code> when the track is created. On creation of the captured track with a specific, non-zero {{frameRequestRate}}, the user agent starts a periodic timer at an interval of <code>1/{{frameRequestRate}}</code> seconds.  At each activation of the timer, the <code><a>frameCaptureRequested</a></code> property is set to <code>true</code>.
 
-  In order to support manual control of frame capture with the {{CanvasCaptureMediaStreamTrack/requestFrame()}} method, browsers MUST support a value of 0 for {{frameRate}}.  However, a captured stream MUST request capture of a frame when created, even if {{frameRate}} is zero.
+  In order to support manual control of frame capture with the {{CanvasCaptureMediaStreamTrack/requestFrame()}} method, browsers MUST support a value of 0 for {{frameRequestRate}}.  However, a captured stream MUST request capture of a frame when created, even if {{frameRequestRate}} is zero.
 
-  This method throws a {{NotSupportedError}} if {{frameRate}} is negative.
+  This method throws a {{NotSupportedError}} if {{frameRequestRate}} is negative.
 
   A new frame is requested from the canvas when <code><a>frameCaptureRequested</a></code> is true and the canvas is painted.  Each time that the captured canvas is painted, execute the following steps, for each <var>track</var> capturing from the canvas:
   <ol>
     <li>If new content has been drawn to the canvas since it was last painted, and if the <code><a>frameCaptureRequested</a></code> internal property of <var>track</var> is set, add a new frame to <var>track</var> containing what was painted to the canvas. </li>
 
-    <li>If a {{frameRate}} value was specified, set the <code><a>frameCaptureRequested</a></code> internal property of <var>track</var> to <code>false</code>. </li>
+    <li>If a {{frameRequestRate}} value was specified, set the <code><a>frameCaptureRequested</a></code> internal property of <var>track</var> to <code>false</code>. </li>
   </ol>
+
+  When adding new frames to <var>track</var> containing what was painted to the canvas, the alpha channel content of the canvas must be captured and preserved if the canvas is not fully opaque. The consumers of this <a>track</a> might not preserve the alpha channel.
 
   <div class="note">
     This algorithm results in a captured track not starting until something changes in the canvas.
   </div>
 
-  <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">frameRate</td><td class="prmType"><code>double</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptTrue"><span role="img" aria-label="True">✔</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>MediaStream</code></div>
+  <table class="parameters"><tbody><tr><th>Parameter</th><th>Type</th><th>Nullable</th><th>Optional</th><th>Description</th></tr><tr><td class="prmName">frameRequestRate</td><td class="prmType"><code>double</code></td><td class="prmNullFalse"><span role="img" aria-label="False">✘</span></td><td class="prmOptTrue"><span role="img" aria-label="True">✔</span></td><td class="prmDesc"></td></tr></tbody></table><div><em>Return type: </em><code>MediaStream</code></div>
   </dd>
 </dl>
 
@@ -191,7 +193,11 @@ urlPrefix: https://www.w3.org/TR/mediacapture-streams/#; type: attribute; text: 
 
 urlPrefix: https://www.w3.org/TR/mediacapture-streams/#; type: attribute; text: muted; url: widl-MediaStreamTrack-muted
 
-urlPrefix: https://www.w3.org/TR/mediacapture-streams/#; type: method; text: onmute; url: widl-MediaStreamTrack-onmute
+urlPrefix: https://www.w3.org/TR/mediacapture-streams/#; type: enum-value; text: ended; url: idl-def-MediaStreamTrackState.ended
+
+urlPrefix: https://www.w3.org/TR/mediacapture-streams/#; type: method; text: mute; url: widl-mediastreamtrack-mute
+
+urlPrefix: https://www.w3.org/TR/mediacapture-streams/#; type: method; text: stop(); url: widl-MediaStreamTrack-stop-void
 
 urlPrefix: https://www.w3.org/TR/mediacapture-streams/#; type: method; text: addtrack; url: event-mediastream-addtrack
 urlPrefix: https://www.w3.org/TR/mediacapture-streams/#; type: method; text: removetrack; url: event-mediastream-removetrack
