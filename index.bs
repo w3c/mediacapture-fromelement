@@ -200,6 +200,7 @@ urlPrefix: https://www.w3.org/TR/mediacapture-streams/#; type: method; text: mut
 urlPrefix: https://www.w3.org/TR/mediacapture-streams/#; type: method; text: stop(); url: widl-MediaStreamTrack-stop-void
 
 urlPrefix: https://www.w3.org/TR/mediacapture-streams/#; type: method; text: addtrack; url: event-mediastream-addtrack
+
 urlPrefix: https://www.w3.org/TR/mediacapture-streams/#; type: method; text: removetrack; url: event-mediastream-removetrack
 </pre>
 
@@ -211,6 +212,9 @@ urlPrefix: https://www.w3.org/TR/webrtc/#; type: interface; text: RTCPeerConnect
 https://webaudio.github.io/web-audio-api/#; type: interface; text: MediaStreamAudioSourceNode; url: idl-def-MediaStreamAudioSourceNode
 </pre>
 
+<pre class="anchors">
+https://html.spec.whatwg.org/multipage/scripting.html#; type:dfn; text:origin-clean; url:concept-canvas-origin-clean
+</pre>
 
 <pre class="link-defaults">
 spec: html
@@ -218,7 +222,6 @@ spec: html
         text: allowed to show a popup
         text: in parallel
         text: incumbent settings object
-        text: origin-clean
 spec: webidl;
     type: interface;
         text: Promise
