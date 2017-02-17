@@ -1,7 +1,6 @@
 language: python
-
 python:
-  - "2.7_with_system_site_packages"
+  - 2.7_with_system_site_packages
 sudo: false
 addons:
   apt:
@@ -19,23 +18,31 @@ addons:
 before_install:
   - export CXX="g++-4.8" CC="gcc-4.8"
   - nvm install 6
-  - "export DISPLAY=:99.0"
-  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16 -extension RANDR"
+  - 'export DISPLAY=:99.0'
+  - >-
+    /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid
+    --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0
+    1280x1024x16 -extension RANDR
   - sh -e /etc/init.d/xvfb start
 install:
- - make travissetup
- - pip install pygments lxml setuptools --upgrade
- - git clone https://github.com/tabatkins/bikeshed.git
- - pip install --editable $PWD/bikeshed
- - bikeshed update
+  - make travissetup
+  - pip install pygments lxml setuptools --upgrade
+  - 'git clone https://github.com/tabatkins/bikeshed.git'
+  - pip install --editable $PWD/bikeshed
+  - bikeshed update
 script:
- - bikeshed spec
-
+  - bash ./.travis-deploy.sh
 env:
   global:
-    - URL="https://w3c.github.io/mediacapture-fromelement/W3CTRMANIFEST"
-    - DECISION="https://lists.w3.org/Archives/Public/public-media-capture/2015Dec/0031.html"
-    - secure: "BlcDX7mHk2///8Ye3OEM1bJywVu5G9Ts6jnebio/NrSIsuD8JmaX//QVaxDQMjLdL4GWC9lVtcH5w7/gOvP45ZtyRwlhShGzhXHQTBeiqX7Iq0AvZkwp4aFpoSg6Omdkd9zXbmpDSvA0/XmBcrpXOHdyXASi6n7sa/G5Xq6eaR0="
-
+    - 'URL="https://w3c.github.io/mediacapture-fromelement/W3CTRMANIFEST"'
+    - >-
+      DECISION="https://lists.w3.org/Archives/Public/public-media-capture/2015Dec/0031.html"
+    - secure: >-
+        BlcDX7mHk2///8Ye3OEM1bJywVu5G9Ts6jnebio/NrSIsuD8JmaX//QVaxDQMjLdL4GWC9lVtcH5w7/gOvP45ZtyRwlhShGzhXHQTBeiqX7Iq0AvZkwp4aFpoSg6Omdkd9zXbmpDSvA0/XmBcrpXOHdyXASi6n7sa/G5Xq6eaR0=
+    - secure: >-
+        mktjxvQ8jKMfnQFqrEGkccRtP/+zwnQKsL5gvDRyfpMTm7ZxYC9ovausjZQm3ukZXjYeg4JxIhEbYn7P6AsiaPGYb5HZEhw49pKF0vVbFdeFpYgnU8p242QBzGWuukFjCbyR1G9WbA5/jLGUZSmxDbNKCC+VchNTLv7l+taSRod4lHyA6mzy5zZeW5Hjza0YV2CGWTEhfYr8AG2pZdm5AnS1JpyqnWBZqwNExrE14qgqfS6KYVyRDSZn1FjbW9trnWo+asJeWLMZK82p/QV3dX+wjJDrPJH4vf4t/bzzfIY1XYgN+eM1U9JK2DYYUpljz4sa4xoGJy6TyiUdJgUU2XF3d2jVLUBcrm8G0xJBkmmwNH1xnTYNl/sAFp63bToYqeM2R1f3+yJ8ZV8dxdNHK3Gja/Ctc5Nx7wE50SGseEkQrCFXtPZkhpG/NbHXBaNmd5J5Je1Lb8QvS1hwc2Ae5aHh9jTkxbyMNEv7r1vmBX4AGAbqvBAUh40GVMVEOk7U+VPoedOkJGI/+2YRdhIe7g10xvkBbd5kvj86SRzkFkzebg+httU/9kPeyMTNuF1o7CWqCRiy+PYvgFIakiO9MVfeahTBnfASRqjW3Lhpe6PovR2OjdRM6BdKxKc8gU9FvSrHhKh0W3O0yk1L2YwG0GycBnZs1TlwpuvMEh1DWpU=
 after_success:
-  - test $TRAVIS_BRANCH = "gh-pages" -a $TRAVIS_PULL_REQUEST = false && curl "https://labs.w3.org/echidna/api/request" --data "url=$URL" --data "decision=$DECISION" --data "token=$TOKEN"
+  - >-
+    test $TRAVIS_BRANCH = "gh-pages" -a $TRAVIS_PULL_REQUEST = false && curl
+    "https://labs.w3.org/echidna/api/request" --data "url=$URL" --data
+    "decision=$DECISION" --data "token=$TOKEN"
