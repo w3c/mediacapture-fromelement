@@ -12,10 +12,9 @@ SHA=`git rev-parse --verify HEAD`
 
 SUPER_REPO="https://$GH_TOKEN@github.com/miguelao/mediacapture-fromelement.git"
 
-git config user.name "Travis CI"
-git config user.email "miguelecasassanchez@gmail.compiled"
-
 git clone $SUPER_REPO
+git config user.name "Travis CI"
+git config user.email "miguelecasassanchez@gmail.com"
 
 cd mediacapture-fromelement
 git checkout $TARGET_BRANCH
