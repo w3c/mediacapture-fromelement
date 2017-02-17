@@ -29,7 +29,6 @@ install:
  - pip install --editable $PWD/bikeshed
  - bikeshed update
 script:
- - make check
  - bikeshed spec
 
 env:
