@@ -83,6 +83,8 @@ var respecConfig = {
   // Team Contact.
   wgPatentURI: ["https://www.w3.org/2004/01/pp-impl/43696/status", "https://www.w3.org/2004/01/pp-impl/47318/status"],
 
+  testSuiteURI: "https://github.com/w3c/web-platform-tests/tree/master/mediacapture-fromelement",
+
   otherLinks: [
     {
       key: "Participate",
