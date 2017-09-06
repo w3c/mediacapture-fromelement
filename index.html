@@ -372,7 +372,7 @@
           stream can use this method to control when frames from the canvas are captured.
         </p>
         <div>
-          <pre class="idl">interface CanvasCaptureMediaStreamTrack : MediaStreamTrack {
+          <pre class="idl">[Exposed=Window] interface CanvasCaptureMediaStreamTrack : MediaStreamTrack {
     readonly        attribute HTMLCanvasElement canvas;
     void requestFrame ();
 };</pre>
