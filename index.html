@@ -318,6 +318,11 @@
                 This algorithm results in a captured track not starting until something changes in
                 the canvas.
               </p>
+              <p class="note">
+                For <a href="http://www.khronos.org/registry/webgl/specs/latest/">WebGL</a>-rendered
+                canvases, <code>preserveDrawingBuffer</code> must be set to <code>true</code> in order
+                for <code><dfn>captureStream</dfn>()</code> to work reliably.
+              </p>
               <table class="parameters">
                 <tbody>
                   <tr>
