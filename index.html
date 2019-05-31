@@ -131,14 +131,13 @@
                 <code>MediaStream</code>.
               </p>
               <p>
-                A captured <code>MediaStreamTrack</code> ends when <a href=
+                A captured <code>MediaStreamTrack</code> <a href=
+                "https://w3c.github.io/mediacapture-main/#ends-nostop">ends</a> when <a href=
                 "http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">playback
                 ends</a> (and the <code>ended</code> event fires) or when the track that it
                 captures is no longer selected or enabled for playback. A track is no longer
                 selected or enabled if the source is changed by setting the <code>src</code> or
-                <code>srcObject</code> attributes of the media element. The steps in <code><a href=
-                "https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack-stop">MediaStreamTrack.stop()</a></code>
-                are performed on the <code>MediaStreamTrack</code> when it ends.
+                <code>srcObject</code> attributes of the media element.
               </p>
               <p>
                 The set of captured <code>MediaStreamTrack</code>s change if the source of the
