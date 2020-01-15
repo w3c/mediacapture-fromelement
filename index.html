@@ -58,25 +58,21 @@
         terminology.
       </p>
     </section>
-    <section data-link-for="HTMLMediaElement" data-dfn-for="HTMLMediaElement">
+    <section>
       <h2>
         HTML Media Element Media Capture Extensions
       </h2>
       <p>
-        Method <code><a>captureStream</a>()</code>is defined on HTML [[!HTML5]] media elements.
-        Methods for capture are added to both <code><dfn><a href=
-        "https://www.w3.org/TR/html5/embedded-content-0.html#htmlmediaelement">HTMLMediaElement</a></dfn></code>
-        and <code><dfn><a href=
-        "https://www.w3.org/TR/html5/scripting-1.html#htmlcanvaselement">HTMLCanvasElement</a></dfn></code>.
+        The method {{HTMLMediaElement/captureStream}} is added on HTML [[!HTML5]] media elements.
+        Methods for capture are added to both {{HTMLMediaElement}}
+        and {{HTMLCanvasElement}}.
       </p>
       <p>
-        Both <code>MediaStream</code> and <code><a>HTMLMediaElement</a></code> expose the concept
+        Both <code>MediaStream</code> and {{HTMLMediaElement}} expose the concept
         of a <q>track</q>. Since there is no common type used for
-        <code><a>HTMLMediaElement</a></code>, this document uses the term <dfn>track</dfn> to refer
-        to either <code><dfn><a href=
-        "http://www.w3.org/TR/html5/embedded-content-0.html#videotrack">VideoTrack</a></dfn></code>
-        or <code><dfn><a href=
-        "http://www.w3.org/TR/html5/embedded-content-0.html#audiotrack">AudioTrack</a></dfn></code>.
+        {{HTMLMediaElement}}, this document uses the term <dfn>track</dfn> to refer
+        to either {{VideoTrack}}
+        or {{AudioTrack}}.
         <code><dfn><a href=
         "https://w3c.github.io/mediacapture-main/#idl-def-MediaStreamTrack">MediaStreamTrack</a></dfn></code>
         is used to identify the media in a <code><dfn><a href=
@@ -92,21 +88,21 @@
           </h2>
           <dl class="methods">
             <dt>
-              <code>captureStream</code>
+              {{HTMLMediaElement/captureStream}}
             </dt>
             <dd>
               <p>
-                The <code><dfn>captureStream()</dfn></code> method produces a real-time capture of
+                The <dfn data-dfn-for="HTMLMediaElement">captureStream()</dfn> method produces a real-time capture of
                 the media that is rendered to the media element.
               </p>
               <p>
                 The captured <code>MediaStream</code> comprises of <code>MediaStreamTrack</code>s
                 that render the content from the set of <a href=
-                "http://www.w3.org/TR/html5/embedded-content-0.html#dom-videotracklist-selectedindex">
-                selected</a> (for <code><a>VideoTrack</a></code>s, or other exclusively selected
+                "https://html.spec.whatwg.org/multipage/media.html#dom-videotracklist-selectedindex">
+                selected</a> (for {{VideoTrack}}s, or other exclusively selected
                 <a>track</a> types) or <a href=
-                "http://www.w3.org/TR/html5/embedded-content-0.html#dom-audiotrack-enabled">enabled</a>
-                (for <code><a>AudioTrack</a></code>s, or other <a>track</a> types that support
+                "https://html.spec.whatwg.org/multipage/media.html#dom-audiotrack-enabled">enabled</a>
+                (for {{AudioTrack}}s, or other <a>track</a> types that support
                 multiple selections) <a>track</a>s from the media element. If the media element
                 does not have a selected or enabled <a>track</a>s of a given type, then no
                 <code>MediaStreamTrack</code> of that type is present in the captured stream.
@@ -124,7 +120,7 @@
                 particular, if the media element does not have a source assigned, then the captured
                 <code>MediaStream</code> has no tracks. Consequently, a media element with a ready
                 state of <a href=
-                "http://www.w3.org/TR/html5/embedded-content-0.html#dom-media-have_nothing">HAVE_NOTHING</a>
+                "https://html.spec.whatwg.org/multipage/media.html#dom-media-have_nothing">HAVE_NOTHING</a>
                 produces no captured <code>MediaStreamTrack</code> instances. Once metadata is
                 available and the selected or enabled <a>track</a>s are determined, new captured
                 <code>MediaStreamTrack</code> instances are created and added to the
@@ -133,11 +129,11 @@
               <p>
                 A captured <code>MediaStreamTrack</code> <a href=
                 "https://w3c.github.io/mediacapture-main/#ends-nostop">ends</a> when <a href=
-                "http://www.w3.org/TR/html5/embedded-content-0.html#ended-playback">playback
+                "https://html.spec.whatwg.org/multipage/media.html#ended-playback">playback
                 ends</a> (and the <code>ended</code> event fires) or when the track that it
                 captures is no longer selected or enabled for playback. A track is no longer
-                selected or enabled if the source is changed by setting the <code>src</code> or
-                <code>srcObject</code> attributes of the media element.
+                selected or enabled if the source is changed by setting the {{HTMLMediaElement/src}} or
+                {{HTMLMediaElement/srcObject}} attributes of the media element.
               </p>
               <p>
                 The set of captured <code>MediaStreamTrack</code>s change if the source of the
@@ -145,7 +141,7 @@
                 is selected.
               </p>
               <p>
-                If the selected <a>VideoTrack</a> or enabled <a>AudioTrack</a>s for the media
+                If the selected {{VideoTrack}} or enabled {{AudioTrack}}s for the media
                 element change, a <code><a href=
                 "https://w3c.github.io/mediacapture-main/#event-mediastream-addtrack">addtrack</a></code>
                 event with a new <code>MediaStreamTrack</code> is generated for each <a>track</a>
@@ -198,9 +194,9 @@
               </p>
               <p>
                 What output a muted capture produces as a result will vary based on the type of
-                media: a <code><a>VideoTrack</a></code> ceases to capture new frames when muted,
+                media: a {{VideoTrack}} ceases to capture new frames when muted,
                 causing the captured stream to show the last captured frame; a muted
-                <code><a>AudioTrack</a></code> produces silence.
+                {{AudioTrack}} produces silence.
               </p>
               <p>
                 Whether a media element is actively rendering content (e.g., to a screen or audio
@@ -211,7 +207,7 @@
               </p>
               <p>
                 Captured audio from an element with an <a href=
-                "http://www.w3.org/TR/html5/embedded-content-0.html#effective-playback-rate">effective
+                "https://html.spec.whatwg.org/multipage/media.html#dom-media-playbackrate">effective
                 playback rate</a> other than 1.0 MUST be time-stretched. An unplayable playback
                 rate causes the captured audio track to become muted.
               </p>
@@ -220,13 +216,13 @@
         </section>
       </div>
     </section>
-    <section data-link-for="HTMLCanvasElement" data-dfn-for="HTMLCanvasElement">
+    <section>
       <h2>
         HTML Canvas Element Media Capture Extensions
       </h2>
       <p>
-        The <code><a>captureStream()</a></code> method is added to the HTML [[!HTML5]] canvas
-        element. The resulting <code><a>CanvasCaptureMediaStreamTrack</a></code> provides methods
+        The {{HTMLCanvasElement/captureStream}} method is added to the HTML [[!HTML5]] canvas
+        element. The resulting {{CanvasCaptureMediaStreamTrack}} provides methods
         that allow for controlling when frames are sampled from the canvas.
       </p>
       <div>
@@ -239,56 +235,53 @@
           </h2>
           <dl class="methods">
             <dt>
-              <code>captureStream</code>
+              {{HTMLCanvasElement/captureStream}}
             </dt>
             <dd>
               <p>
-                The <code><dfn>captureStream()</dfn></code> method produces a real-time video
+                The <dfn data-dfn-for="HTMLCanvasElement">captureStream()</dfn> method produces a real-time video
                 capture of the surface of the canvas. The resulting media stream has a single video
-                <code><a>CanvasCaptureMediaStreamTrack</a></code> that matches the dimensions of
+                {{CanvasCaptureMediaStreamTrack}} that matches the dimensions of
                 the canvas element.
               </p>
               <p>
                 Content from a canvas that is not <dfn><a href=
-                "http://www.w3.org/html/wg/drafts/html/master/semantics.html#concept-canvas-origin-clean">
-                origin-clean</a></dfn> MUST NOT be captured. This method throws a <a href=
-                "http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#securityerror">SecurityError</a>
+                "https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-origin-clean">
+                origin-clean</a></dfn> MUST NOT be captured. This method throws a {{SecurityError}}
                 exception if the canvas is not <a>origin-clean</a>.
               </p>
               <p>
                 A captured stream MUST immediately cease to capture content if the
-                <a>origin-clean</a> flag of the source canvas becomes false after the stream is
-                created by <code>captureStream()</code>. The captured <code>MediaStreamTrack</code>
+                [= origin-clean =] flag of the source canvas becomes false after the stream is
+                created by {{HTMLCanvasElement/captureStream()}}. The captured <code>MediaStreamTrack</code>
                 MUST become <a>muted</a>, producing no new content while the canvas remains in this
                 state.
               </p>
               <p>
-                Each track that captures a canvas has an internal
-                <code><dfn>frameCaptureRequested</dfn></code> property that is set to true when a
+                Each track that captures a canvas has a
+                <dfn>[[\frameCaptureRequested]]</dfn> internal slot that is set to <code>true</code> when a
                 new frame is requested from the canvas.
               </p>
               <p>
-                The value of the <code><a>frameCaptureRequested</a></code> property on all new
+                The value of  <a>[[\frameCaptureRequested]]</a> on all new
                 tracks is set to <code>true</code> when the track is created. On creation of the
-                captured track with a specific, non-zero <code>frameRequestRate</code>, the <a>user
-                agent</a> starts a periodic timer at an interval of <code>1/frameRequestRate</code>
-                seconds. At each activation of the timer, the
-                <code><a>frameCaptureRequested</a></code> property is set to <code>true</code>.
+                captured track with a specific, non-zero <var>frameRequestRate</var>, the <a>user
+                agent</a> starts a periodic timer at an interval of <code>1/<var>frameRequestRate</var></code>
+                seconds. At each activation of the timer,
+                <a>[[\frameCaptureRequested]]</a> is set to <code>true</code>.
               </p>
               <p>
                 In order to support manual control of frame capture with the
-                <code><a>requestFrame</a>()</code> method, browsers MUST support a value of 0 for
-                <code>frameRequestRate</code>. However, a captured stream MUST request capture of a
-                frame when created, even if <code>frameRequestRate</code> is zero.
+                {{CanvasCaptureMediaStreamTrack/requestFrame}}() method, browsers MUST support a value of 0 for
+                <var>frameRequestRate</var>. However, a captured stream MUST request capture of a
+                frame when created, even if <var>frameRequestRate</var> is zero.
               </p>
               <p>
-                This method throws a <a href=
-                "http://www.w3.org/html/wg/drafts/html/master/infrastructure.html#notsupportederror">
-                NotSupportedError</a> if <code>frameRequestRate</code> is negative.
+                This method throws a {{NotSupportedError}} if <var>frameRequestRate</var> is negative.
               </p>
               <p>
                 A new frame is requested from the canvas when
-                <code><a>frameCaptureRequested</a></code> is true and the canvas is painted. Each
+                <a>[[\frameCaptureRequested]]</a> is true and the canvas is painted. Each
                 time that the captured canvas is painted, the following steps are executed:
               </p>
               <ol>
@@ -296,12 +289,12 @@
                 steps:
                   <ol>
                     <li>If new content has been drawn to the canvas since it was last painted, and
-                    if the <code><a>frameCaptureRequested</a></code> internal property of
+                    if the <a>[[\frameCaptureRequested]]</a> internal slot of
                     <var>track</var> is set, add a new frame to <var>track</var> containing what
                     was painted to the canvas.
                     </li>
-                    <li>If a <code>frameRequestRate</code> value was specified, set the
-                    <code><a>frameCaptureRequested</a></code> internal property of <var>track</var>
+                    <li>If a <var>frameRequestRate</var> value was specified, set the
+                    <a>[[\frameCaptureRequested]]</a> internal slot of <var>track</var>
                     to <code>false</code>.
                     </li>
                   </ol>
@@ -310,7 +303,7 @@
               <p>
                 When adding new frames to <var>track</var> containing what was painted to the
                 canvas, the alpha channel content of the canvas must be captured and preserved if
-                the canvas is not fully opaque. The consumers of this <code>track</code> might not
+                the canvas is not fully opaque. The consumers of this <var>track</var> might not
                 preserve the alpha channel.
               </p>
               <p class="note">
@@ -362,11 +355,11 @@
       </div>
       <section>
         <h2>
-          The <code>CanvasCaptureMediaStreamTrack</code>
+          The {{CanvasCaptureMediaStreamTrack}}
         </h2>
         <p>
-          The <code><dfn>CanvasCaptureMediaStreamTrack</dfn></code> is an extension of
-          <code>MediaStreamTrack</code> that provide a single <code>requestFrame()</code> method.
+          The <dfn>CanvasCaptureMediaStreamTrack</dfn> is an extension of
+          <code>MediaStreamTrack</code> that provide a single {{CanvasCaptureMediaStreamTrack/requestFrame()}} method.
           Applications that depend on tight control over the rendering of content to the media
           stream can use this method to control when frames from the canvas are captured.
         </p>
@@ -398,17 +391,17 @@
             <dl data-link-for="CanvasCaptureMediaStreamTrack" data-dfn-for=
             "CanvasCaptureMediaStreamTrack" class="methods">
               <dt>
-                <code>requestFrame</code>
+                {{requestFrame}}
               </dt>
               <dd>
                 <p>
-                  The <code><dfn>requestFrame</dfn>()</code> method allows applications to manually
+                  The <dfn>requestFrame</dfn>() method allows applications to manually
                   request that a frame from the canvas be captured and rendered into the track. In
                   cases where applications progressively render to a canvas, this allows
                   applications to avoid capturing a partially rendered frame.
                 </p>
                 <p class="note">
-                  As currently specified, this results in no <code>SecurityError</code> or other
+                  As currently specified, this results in no {{SecurityError}} or other
                   error feedback if the canvas is not origin-clean. In part, this is because we
                   don't track where requests for frames come from. Do we want to highlight that?
                 </p>
@@ -436,10 +429,9 @@
       <p>
         How this protection manifests will differ, depending on how the content is accessed. For
         instance, rendering inaccessible video to a <code>canvas</code> element [[2DCONTEXT]]
-        causes the <var><a href=
-        "http://www.w3.org/TR/2dcontext2/#the-image-argument-is-not-origin-clean">origin-clean</a></var>
-        property of the canvas to become <code>false</code>; attempting to create a Web Audio
-        <code>MediaStreamAudioSourceNode</code> [[WEBAUDIO]] succeeds, but produces no information
+        causes the [= origin-clean =]
+        flag of the canvas to become <code>false</code>; attempting to create a Web Audio
+        {{MediaStreamAudioSourceNode}} [[WEBAUDIO]] succeeds, but produces no information
         to the document origin (that is, only silence is transmitted into the audio context);
         attempting to transfer the media using WebRTC [[WEBRTC]] results in no information being
         transmitted.

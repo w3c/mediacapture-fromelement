@@ -82,7 +82,7 @@ var respecConfig = {
   // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
   // Team Contact.
   wgPatentURI: ["https://www.w3.org/2004/01/pp-impl/47318/status"],
-
+  xref: ['html', 'webidl', 'dom', 'webaudio'],
   testSuiteURI: "https://github.com/web-platform-tests/wpt/tree/master/mediacapture-fromelement",
 
   otherLinks: [
