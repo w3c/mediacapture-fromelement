@@ -6,7 +6,7 @@
       Media Capture from DOM Elements
     </title>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <script class="remove" src="https://www.w3.org/Tools/respec/respec-w3c-common">
+    <script class="remove" src="https://www.w3.org/Tools/respec/respec-w3c">
     //<![CDATA[
     <!-- keep this comment: what a frightening kludge -->
     //]]>
@@ -21,8 +21,8 @@
     <section id="abstract">
       <p>
         This document defines how a stream of media can be captured from a DOM element, such as a
-        <code>&lt;video&gt;</code>, <code>&lt;audio&gt;</code>, or <code>&lt;canvas&gt;</code>
-        element, in the form of a <code>MediaStream</code> [[GETUSERMEDIA]].
+        [^video^], [^audio^], or [^canvas^]
+        element, in the form of a {{MediaStream}} [[GETUSERMEDIA]].
       </p>
     </section>
     <section id="sotd">
@@ -41,7 +41,7 @@
         media.
       </p>
       <p>
-        The captured media is formed into a <code>MediaStream</code> [[GETUSERMEDIA]], which can
+        The captured media is formed into a {{MediaStream}} [[GETUSERMEDIA]], which can
         then be consumed by the various APIs that process streams of media, such as WebRTC
         [[WEBRTC]], or Web Audio [[WEBAUDIO]].
       </p>
@@ -68,15 +68,13 @@
         and {{HTMLCanvasElement}}.
       </p>
       <p>
-        Both <code>MediaStream</code> and {{HTMLMediaElement}} expose the concept
+        Both {{MediaStream}} and {{HTMLMediaElement}} expose the concept
         of a <q>track</q>. Since there is no common type used for
         {{HTMLMediaElement}}, this document uses the term <dfn>track</dfn> to refer
         to either {{VideoTrack}}
         or {{AudioTrack}}.
-        <code><dfn><a href=
-        "https://w3c.github.io/mediacapture-main/#idl-def-MediaStreamTrack">MediaStreamTrack</a></dfn></code>
-        is used to identify the media in a <code><dfn><a href=
-        "https://w3c.github.io/mediacapture-main/#idl-def-MediaStream">MediaStream</a></dfn></code>.
+        {{MediaStreamTrack}}
+        is used to identify the media in a {{MediaStream}}.
       </p>
       <div>
         <pre class="idl">partial interface HTMLMediaElement {
@@ -96,7 +94,7 @@
                 the media that is rendered to the media element.
               </p>
               <p>
-                The captured <code>MediaStream</code> comprises of <code>MediaStreamTrack</code>s
+                The captured {{MediaStream}} comprises of {{MediaStreamTrack}}s
                 that render the content from the set of <a href=
                 "https://html.spec.whatwg.org/multipage/media.html#dom-videotracklist-selectedindex">
                 selected</a> (for {{VideoTrack}}s, or other exclusively selected
@@ -105,29 +103,29 @@
                 (for {{AudioTrack}}s, or other <a>track</a> types that support
                 multiple selections) <a>track</a>s from the media element. If the media element
                 does not have a selected or enabled <a>track</a>s of a given type, then no
-                <code>MediaStreamTrack</code> of that type is present in the captured stream.
+                {{MediaStreamTrack}} of that type is present in the captured stream.
               </p>
               <p>
-                A <code>&lt;video&gt;</code> element can therefore capture a video
-                <code>MediaStreamTrack</code> and any number of audio
-                <code>MediaStreamTrack</code>s. An <code>&lt;audio&gt;</code> element can capture
-                any number of audio <code>MediaStreamTrack</code>s. In both cases, the set of
-                captured <code>MediaStreamTrack</code>s could be empty.
+                A [^video^] element can therefore capture a video
+                {{MediaStreamTrack}} and any number of audio
+                {{MediaStreamTrack}}s. An [^audio^] element can capture
+                any number of audio {{MediaStreamTrack}}s. In both cases, the set of
+                captured {{MediaStreamTrack}}s could be empty.
               </p>
               <p>
                 Unless and until there is a <a>track</a> of given type that is selected or enabled,
-                no <code>MediaStreamTrack</code> of that type is present in the captured stream. In
+                no {{MediaStreamTrack}} of that type is present in the captured stream. In
                 particular, if the media element does not have a source assigned, then the captured
-                <code>MediaStream</code> has no tracks. Consequently, a media element with a ready
+                {{MediaStream}} has no tracks. Consequently, a media element with a ready
                 state of <a href=
                 "https://html.spec.whatwg.org/multipage/media.html#dom-media-have_nothing">HAVE_NOTHING</a>
-                produces no captured <code>MediaStreamTrack</code> instances. Once metadata is
+                produces no captured {{MediaStreamTrack}} instances. Once metadata is
                 available and the selected or enabled <a>track</a>s are determined, new captured
-                <code>MediaStreamTrack</code> instances are created and added to the
-                <code>MediaStream</code>.
+                {{MediaStreamTrack}} instances are created and added to the
+                {{MediaStream}}.
               </p>
               <p>
-                A captured <code>MediaStreamTrack</code> <a href=
+                A captured {{MediaStreamTrack}} <a href=
                 "https://w3c.github.io/mediacapture-main/#ends-nostop">ends</a> when <a href=
                 "https://html.spec.whatwg.org/multipage/media.html#ended-playback">playback
                 ends</a> (and the <code>ended</code> event fires) or when the track that it
@@ -136,7 +134,7 @@
                 {{HTMLMediaElement/srcObject}} attributes of the media element.
               </p>
               <p>
-                The set of captured <code>MediaStreamTrack</code>s change if the source of the
+                The set of captured {{MediaStreamTrack}}s change if the source of the
                 media element changes. If the source for the media element ends, a different source
                 is selected.
               </p>
@@ -144,24 +142,24 @@
                 If the selected {{VideoTrack}} or enabled {{AudioTrack}}s for the media
                 element change, a <code><a href=
                 "https://w3c.github.io/mediacapture-main/#event-mediastream-addtrack">addtrack</a></code>
-                event with a new <code>MediaStreamTrack</code> is generated for each <a>track</a>
+                event with a new {{MediaStreamTrack}} is generated for each <a>track</a>
                 that was not previously selected or enabled; and a <code><a href=
                 "https://w3c.github.io/mediacapture-main/#event-mediastream-removetrack">removetrack</a></code>
                 events is generated for each <a>track</a> that ceases to be selected or enabled. A
-                <code>MediaStreamTrack</code> MUST end prior to being removed from the
-                <code>MediaStream</code>.
+                {{MediaStreamTrack}} MUST end prior to being removed from the
+                {{MediaStream}}.
               </p>
               <p>
-                Since a <code>MediaStreamTrack</code> can only end once, a track that is enabled,
+                Since a {{MediaStreamTrack}} can only end once, a track that is enabled,
                 disabled and re-enabled will be captured as two separate tracks. Similarly,
                 restarting playback after playback ends causes a new set of captured
-                <code>MediaStreamTrack</code> instances to be created. Seeking during playback
+                {{MediaStreamTrack}} instances to be created. Seeking during playback
                 without changing track selection does not generate events or cause a captured
-                <code>MediaStreamTrack</code> to end.
+                {{MediaStreamTrack}} to end.
               </p>
               <p>
-                The <code>MediaStreamTrack</code>s that comprise the captured
-                <code>MediaStream</code> become muted or unmuted as the tracks they capture change
+                The {{MediaStreamTrack}}s that comprise the captured
+                {{MediaStream}} become muted or unmuted as the tracks they capture change
                 state. At any time, a media element might not have active content available for
                 capture on a given track for a variety of reasons:
               </p>
@@ -171,7 +169,7 @@
                 <li>A <a>track</a> might not have content for the current playback time if that
                 time is either before the content of that track starts or after the content ends.
                 </li>
-                <li>A <code>MediaStreamTrack</code> that is acting as a source could be
+                <li>A {{MediaStreamTrack}} that is acting as a source could be
                 <dfn><a href="https://w3c.github.io/mediacapture-main/#track-muted">muted</a></dfn>
                 or <dfn><a href=
                 "https://w3c.github.io/mediacapture-main/#track-enabled">disabled</a></dfn>.
@@ -185,11 +183,11 @@
               <p>
                 Absence of content is reflected in captured tracks through the <code><a href=
                 "https://w3c.github.io/mediacapture-main/#dom-mediastreamtrack-muted">muted</a></code>
-                attribute. A captured <code>MediaStreamTrack</code> MUST have a
+                attribute. A captured {{MediaStreamTrack}} MUST have a
                 <code><a>muted</a></code> attribute set to <code>true</code> if its corresponding
                 source <a>track</a> does not have available and accessible content. A
                 <code><a href="https://w3c.github.io/mediacapture-main/#event-mediastreamtrack-mute">
-                mute</a></code> event is raised on the <code>MediaStreamTrack</code> when content
+                mute</a></code> event is raised on the {{MediaStreamTrack}} when content
                 availability changes.
               </p>
               <p>
@@ -253,7 +251,7 @@
               <p>
                 A captured stream MUST immediately cease to capture content if the
                 [= origin-clean =] flag of the source canvas becomes false after the stream is
-                created by {{HTMLCanvasElement/captureStream()}}. The captured <code>MediaStreamTrack</code>
+                created by {{HTMLCanvasElement/captureStream()}}. The captured {{MediaStreamTrack}}
                 MUST become <a>muted</a>, producing no new content while the canvas remains in this
                 state.
               </p>
@@ -347,7 +345,7 @@
                 </tbody>
               </table>
               <div>
-                <em>Return type:</em> <code>MediaStream</code>
+                <em>Return type:</em> {{MediaStream}}
               </div>
             </dd>
           </dl>
@@ -359,7 +357,7 @@
         </h2>
         <p>
           The <dfn>CanvasCaptureMediaStreamTrack</dfn> is an extension of
-          <code>MediaStreamTrack</code> that provide a single {{CanvasCaptureMediaStreamTrack/requestFrame()}} method.
+          {{MediaStreamTrack}} that provide a single {{CanvasCaptureMediaStreamTrack/requestFrame()}} method.
           Applications that depend on tight control over the rendering of content to the media
           stream can use this method to control when frames from the canvas are captured.
         </p>
@@ -367,8 +365,7 @@
           <pre class="idl">[Exposed=Window] interface CanvasCaptureMediaStreamTrack : MediaStreamTrack {
     readonly        attribute HTMLCanvasElement canvas;
     undefined requestFrame ();
-};
-          </pre>
+};</pre>
           <section>
             <h2>
               Attributes
@@ -376,8 +373,7 @@
             <dl data-link-for="CanvasCaptureMediaStreamTrack" data-dfn-for=
             "CanvasCaptureMediaStreamTrack" class="attributes">
               <dt>
-                <dfn><code>canvas</code></dfn> of type <span class=
-                "idlAttrType"><a>HTMLCanvasElement</a></span>, readonly
+                <dfn><code>canvas</code></dfn> of type {{HTMLCanvasElement}}, readonly
               </dt>
               <dd>
                 The canvas element that this media stream captures.
@@ -409,7 +405,7 @@
                   <em>No parameters.</em>
                 </div>
                 <div>
-                  <em>Return type:</em> <code>void</code>
+                  <em>Return type:</em> <code>undefined</code>
                 </div>
               </dd>
             </dl>
@@ -423,12 +419,12 @@
       </h2>
       <p>
         Media elements can render media resources from origins that differ from the origin of the
-        media element. In those cases, the contents of the resulting <code>MediaStreamTrack</code>
+        media element. In those cases, the contents of the resulting {{MediaStreamTrack}}
         MUST be protected from access by the document origin.
       </p>
       <p>
         How this protection manifests will differ, depending on how the content is accessed. For
-        instance, rendering inaccessible video to a <code>canvas</code> element [[2DCONTEXT]]
+        instance, rendering inaccessible video to a [^canvas^] element [[HTML]]
         causes the [= origin-clean =]
         flag of the canvas to become <code>false</code>; attempting to create a Web Audio
         {{MediaStreamAudioSourceNode}} [[WEBAUDIO]] succeeds, but produces no information
