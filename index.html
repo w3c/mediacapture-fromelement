@@ -257,16 +257,16 @@
               </p>
               <p>
                 Each track that captures a canvas has a
-                <dfn>[[\frameCaptureRequested]]</dfn> internal slot that is set to <code>true</code> when a
+                <dfn data-dfn-for="track">{{track/[[frameCaptureRequested]]}}</dfn> internal slot that is set to <code>true</code> when a
                 new frame is requested from the canvas.
               </p>
               <p>
-                The value of  <a>[[\frameCaptureRequested]]</a> on all new
+                The value of  {{track/[[frameCaptureRequested]]}} on all new
                 tracks is set to <code>true</code> when the track is created. On creation of the
                 captured track with a specific, non-zero <var>frameRequestRate</var>, the <a>user
                 agent</a> starts a periodic timer at an interval of <code>1/<var>frameRequestRate</var></code>
                 seconds. At each activation of the timer,
-                <a>[[\frameCaptureRequested]]</a> is set to <code>true</code>.
+                {{track/[[frameCaptureRequested]]}} is set to <code>true</code>.
               </p>
               <p>
                 In order to support manual control of frame capture with the
@@ -279,7 +279,7 @@
               </p>
               <p>
                 A new frame is requested from the canvas when
-                <a>[[\frameCaptureRequested]]</a> is true and the canvas is painted. Each
+                {{track/[[frameCaptureRequested]]}} is true and the canvas is painted. Each
                 time that the captured canvas is painted, the following steps are executed:
               </p>
               <ol>
@@ -287,12 +287,12 @@
                 steps:
                   <ol>
                     <li>If new content has been drawn to the canvas since it was last painted, and
-                    if the <a>[[\frameCaptureRequested]]</a> internal slot of
+                    if the {{track/[[frameCaptureRequested]]}} internal slot of
                     <var>track</var> is set, add a new frame to <var>track</var> containing what
                     was painted to the canvas.
                     </li>
                     <li>If a <var>frameRequestRate</var> value was specified, set the
-                    <a>[[\frameCaptureRequested]]</a> internal slot of <var>track</var>
+                    {{track/[[frameCaptureRequested]]}} internal slot of <var>track</var>
                     to <code>false</code>.
                     </li>
                   </ol>
